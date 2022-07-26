@@ -1,0 +1,286 @@
+html {
+  margin:1em;
+  font-family:-apple-system, BlinkMacSystemFont, 'Recursive', 'Courier New', monospace;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  --animTime:0.2s;
+  --medAnimTime:0.35s;
+  --longAnimTime:2s;
+  --longTransition:cubic-bezier(0.9, 0, 0.1, 1);
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  font-variation-settings: 'CASL' 1;
+  font-weight:370;
+  background:var(--colorBg);
+  color:var(--colorFg);
+  transition:all var(--longAnimTime) ease;
+  overflow-x:hidden;
+}
+body{
+  margin:0;
+}
+
+@keyframes fadeIn {
+  0% {opacity:0}
+  100% {opacity:1}
+}
+@keyframes growIn {
+  0% {font-size:0;opacity:0}
+  100% {font-size:1em;opacity:1}
+}
+@keyframes fadeInLeft {
+  0% {transform:translateX(-10rem);font-size:0;opacity:0}
+  100% {transform:translateX(0);font-size:1em;opacity:1}
+}
+@keyframes cooldown {
+  0% {color:var(--colorFg)}
+  100% {color:var(--color1)}
+}
+::-webkit-scrollbar {
+  width: 0.5em;
+  height: 0.5em;
+  background:transparent;
+}
+::-webkit-scrollbar-track {
+  background:transparent;
+  border-radius: 1em;
+}
+::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(45deg, transparent 25%, var(--color1) 25%, var(--color1) 50%, transparent 50%, transparent 75%, var(--color1) 75%, var(--color1));
+  background-color: var(--selColor);
+  border-radius: 1em;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color1);
+}
+::-webkit-scrollbar-thumb:active {
+  background-color: var(--selColor);
+}
+::selection {
+  color:var(--colorBg);
+  background:var(--selColor);
+}
+#shell {
+  width:max-content;
+  max-width:100%;
+  font-variation-settings: 'MONO' 1;
+  padding:0 0.3em;
+}
+#shell > .button {
+  background-image:var(--icon-enter);
+}
+#shell.valid > .button {
+  background-image:var(--bg-icon-enter);
+  background-color:var(--color1);
+}
+#shell.empty > .button {
+  opacity:0;
+  pointer-events:none;
+}
+#shell > .button > .hidden {
+  transition:all var(--animTime) ease;
+  font-size:0;
+}
+#shell.valid > .button > .hidden {
+  font-size:1em;
+  background-color:var(--color1);
+  color:var(--colorBg);
+}
+#shellPrefix {
+  color:var(--color1);
+  transition:all var(--animTime) ease;
+  font-variation-settings: 'CASL' 0;
+}
+hr {
+  background:var(--color1);
+  border-color:transparent;
+  margin:1em 0;
+}
+#shellPrefix > .hidden {
+  transition:all var(--medAnimTime) ease;
+  font-size:0;
+  font-variation-settings: 'CASL' 1, 'slnt' -15;
+}
+#shellPrefix:hover > .hidden {
+  transition-duration:var(--longAnimTime);
+  transition-timing-function:var(--longTransition);
+  font-size:1em;
+}
+#root > * {
+  margin: 1rem 0;
+  margin-top:0.3em;
+}
+#shellInput {
+  transition:max-width var(--animTime) ease-in-out;
+  white-space:break-spaces;
+}
+#suggestions {
+  transition:all var(--animTime) ease;
+  padding:0.3em 0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  font-variation-settings: 'CASL' 1;
+  white-space:nowrap;
+  min-height:1.3em;
+  max-height:1.3em;
+  --localColor:var(--color1);
+  --localBg:var(--color1Bg);
+}
+#suggestions:empty {
+  min-height:0;
+  max-height:0;
+  margin:0;
+  padding:0;
+}
+#suggestions.hot {
+  --localColor:var(--colorFg);
+}
+#suggestions > span {
+  animation: var(--medAnimTime) ease-out 0s 1 growIn;
+  transition:all var(--medAnimTime) ease;
+  color:var(--localColor);
+  background-color:var(--localBg);
+  border-radius:0.3em;
+  border:0.1em solid var(--localColor);
+  cursor:pointer;
+  padding:0.2em 0 0.2em 0.2em;
+  margin:0 0.2em;
+}
+@keyframes shrinkOut {
+  0% {font-size:1em;opacity:1}
+  100% {font-size:0;opacity:0}
+}
+#suggestions > span.hidden {
+  animation: var(--medAnimTime) ease-in 0s 1 shrinkOut;
+  user-select:none;
+  font-size:0;
+  opacity:0;
+}
+#suggestions > span:hover {
+  font-weight:700;
+}
+#suggestions > span:active {
+  font-weight:900;
+}
+#suggestions > span > #hidden {
+  transition:font-size var(--medAnimTime) ease;
+  font-size:0;
+  user-select:none;
+}
+#suggestions > span > #abbrev {
+  transition:font-size var(--medAnimTime) ease;
+  font-size:1em;
+}
+#suggestions > span > #input {
+  transition:font-size var(--animTime) ease;
+  outline:0;
+  font-size:0;
+  color:var(--colorFg);
+}
+#suggestions > span.active > #input {
+  font-size:1em;
+}
+#suggestions > span > #text {
+  transition:font-size var(--animTime) ease;
+  font-size:1em;
+}
+#suggestions > span.active > #text {
+  font-size:0;
+}
+#suggestions > span > #enter {
+  background-repeat:no-repeat;
+  background-position:right;
+  user-select:none;
+  display:none;
+}
+#suggestions > span.active > #enter {
+  display:unset;
+}
+#suggestions > span.active {
+  font-weight:800;
+}
+#suggestions > span.strong {
+  color:var(--colorBg);
+  padding:0.3em 0.1em 0.3em 0.3em;
+  border:0;
+  background:var(--localColor);
+}
+.unstyled {
+  border:0;
+  outline:0;
+}
+.button {
+  font-variation-settings: 'CASL' 1;
+  transition:all var(--animTime) ease;
+  border-radius:0.3em;
+  cursor:pointer;
+  background-color:transparent;
+  padding:0 0.2em;
+  border:0.1em solid transparent;
+  background-position:right;
+  background-origin:content-box;
+  font-weight:400;
+}
+.button:hover {
+  border-color:var(--color1);
+  font-weight:700;
+}
+.button:active {
+  background-color:var(--color1);
+  border-color:var(--color1);
+  font-weight:900;
+}
+.icon {
+  background-repeat:no-repeat;
+  background-size:1em;
+  user-select:none;
+}
+.title {
+  color:var(--color1);
+  font-weight:bold;
+}
+.shellBuffer {
+  display:flex;
+  flex-direction:column;
+  width: fit-content;
+}
+.shellBuffer > div {
+  animation: var(--medAnimTime) ease-out 0s 1 fadeInLeft, var(--longAnimTime) linear 0s 1 cooldown;
+  transition:all var(--animTime) ease;
+  padding:1em 0.3rem;
+  padding-top:0;
+  overflow-wrap:anywhere;
+}
+.shellBuffer > div:hover {
+  font-weight:600;
+}
+.shellBuffer > div:active {
+  font-weight:900;
+}
+.shellBuffer > div.selected {
+  font-weight:800;
+}
+.bufferMap {
+  width:1rem;
+}
+
+#doubleBuffer {
+  display:flex;
+  color:var(--color1);
+  font-variation-settings: 'CASL' 0;
+}
+.hsep {
+  border-left:1px solid var(--colorFg);
+  margin:0 0.5em;
+}
+#cmdBuffer {
+  min-width:7em;
+  font-variation-settings: 'MONO' 1;
+}
+.subtext {
+  font-variation-settings: 'slnt' -15, 'CASL' 1;
+  font-weight:300;
+}
+.subtext.tooltiptrigger {
+  cursor:help;
+}

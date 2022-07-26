@@ -1,0 +1,45 @@
+html {
+  --pink: #F47;
+  --pinkSel: #2AF;
+  --red: #B00;
+  --redSel: #25F;
+  --blue: #00B;
+  --blueSel: #E46;
+  --cyan: #0BB;
+  --cyanSel: #E57;
+  --lightBlue: #07F;
+  --lightBlueSel: #0CC;
+  --dark-cyan: #0FF;
+  --dark-cyanSel: #35F;
+  --colorful-cyanBg: #224444;
+  --dark-cyanBg: #1a3333;
+  --darker-cyanBg: #112222;
+  --dark-lightBlue: #4BF;
+  --dark-lightBlueSel: #0EC;
+  --colorful-lightBlueBg: #1a1a4d;
+  --dark-lightBlueBg: #131339;
+  --darker-lightBlueBg: #0d0d26;
+  --dark-blue: #55F;
+  --dark-blueSel: #0FF;
+  --colorful-blueBg: #1a1a4d;
+  --dark-blueBg: #131339;
+  --darker-blueBg: #0d0d26;
+  --dark-red: #F44;
+  --dark-redSel: #F80;
+  --colorful-redBg: #660000;
+  --dark-redBg: #4d0000;
+  --darker-redBg: #330000;
+  --dark-pink: #F47;
+  --dark-pinkSel: #2AF;
+  --colorful-pinkBg: #4d1a4d;
+  --dark-pinkBg: #391339;
+  --darker-pinkBg: #260d26;
+  /* foreground */
+  --darkFg:#FFF;
+  --lightFg:#000;
+  /* ACTIVE */
+  --color1:var(--dark-blue);
+  --selColor:var(--dark-blueSel);
+  --colorBg:var(--dark-blueBg);
+  --colorFg:var(--darkFg);
+}
