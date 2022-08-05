@@ -1,11 +1,15 @@
-const formatResult = base => props => {
+const formatGeneratorResult = base => props => {
   const output = base(props)
-  return [output[0], `${Math.round(log2(output[1], 16)*100)/100} bits`, `that's out of ${output[1].toLocaleString()} posible passwords`]
+  return ['hidable', output[0], `${Math.round(log2(output[1], 16)*100)/100} bits`, `that's out of ${output[1].toLocaleString()} posible passwords`]
+}
+const formatStatusResult = (base, type='plain') => props => {
+  const output = base(props)
+  return [output[0] ? 'error' : type, output[1]]
 }
 input.commands = {children:{
   generate:{
     help:'generate random meaningful passwords from a number of noun groups and connecting words',
-    base:formatResult(generator.phrase.combined),
+    base:formatGeneratorResult(generator.phrase.combined),
     exclusions:[[['groupCount', 'groupSize', 'firstGroupSize'], 'strength']],
     prioritizedParam:['strength'],
     defaultParam:{groupCount:2, groupSize:2, firstGroupSize:null},
@@ -29,7 +33,7 @@ input.commands = {children:{
     },
     children:{
       strength:{
-        base:formatResult(generator.minEntropy),
+        base:formatGeneratorResult(generator.minEntropy),
         help:'set the password strength in number of bits',
         param:{
           bitCount:{
@@ -42,7 +46,7 @@ input.commands = {children:{
         },
       },
       nounChain:{
-        base:formatResult(generator.nounGroup.randChain),
+        base:formatGeneratorResult(generator.nounGroup.randChain),
         help:'generate a chain of noun groups with a target number of bits of entropy',
         defaultParam:{groupSize:2},
         param:{
@@ -62,7 +66,7 @@ input.commands = {children:{
     },
   },
   theme:{
-    base:setTheme,
+    base:formatStatusResult(setTheme),
     help:'set the theme of the page',
     defaultParam:{color:null, background:null},
     param:{
@@ -72,8 +76,32 @@ input.commands = {children:{
         help:'the color scheme for the theme',
       },
       background:{
-        type:paramType.choices('a theme background', ['white', 'colorful', 'dark', 'darker', 'black'], name => ({text:name})),
+        type:paramType.choices('a theme background', ['white', 'dark', 'darker', 'black'], name => ({text:name})),
         help:'select the dark or light theme background',
+      },
+    },
+  },
+  encode:{
+    base:formatStatusResult(generator.encode, 'hidable'),
+    help:'encode texts to the understandable format',
+    param:{
+      input:{
+        positional:true,
+        hidable:true,
+        type:paramType.string,
+        help:'the text to encode',
+      },
+    },
+  },
+  decode:{
+    base:formatStatusResult(generator.decode, 'hidable'),
+    help:'decode texts from the understandable format',
+    param:{
+      input:{
+        positional:true,
+        hidable:true,
+        type:paramType.string,
+        help:'the text to decode',
       },
     },
   },

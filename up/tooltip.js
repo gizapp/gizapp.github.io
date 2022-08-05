@@ -13,7 +13,7 @@ function makeTooltipTrigger(elem, tooltipText, positionElem) {
   tooltip.innerText = tooltipText || ''
   elem.tooltip = tooltip
   elem.appendChild(tooltip)
-  elem.tooltip.updatePos = function() {
+  tooltip.updatePos = function() {
     const viewportWidth = document.documentElement.clientWidth
     const viewportHeight = document.documentElement.clientHeight
     let tooltipVisible = false
@@ -60,25 +60,30 @@ function makeTooltipTrigger(elem, tooltipText, positionElem) {
     // scope: use :scope to get direct child only and avoid disturbing children's tooltips
     // tooltipVisible: if tooltip is not visible, reset the tooltip animations after updating
   }
-  elem.triggerTooltip = function(timeout) {
+  elem.triggerTooltip = function(timeout = 2500) {
     this.classList.toggle('triggered', true)
-    setTimeout(elem.tooltip.updatePos, 1)
-    setTimeout(function() {elem.classList.toggle('triggered', false)}, timeout)
+    setTimeout(tooltip.updatePos, 1)
+    document.documentElement.classList.add('tooltipForceTriggered')
+    setTimeout(() => {
+      elem.classList.toggle('triggered', false)
+      document.documentElement.classList.remove('tooltipForceTriggered')
+    }, timeout)
   }
-  elem.addEventListener('mouseenter', elem.tooltip.updatePos)
-  elem.addEventListener('touchstart', elem.tooltip.updatePos)
-  elem.addEventListener('touchend', elem.tooltip.updatePos)
-  elem.addEventListener('transitionend', elem.tooltip.updatePos)
+  elem.addEventListener('mouseenter', tooltip.updatePos)
+  elem.addEventListener('touchstart', tooltip.updatePos)
+  elem.addEventListener('touchend', tooltip.updatePos)
+  elem.addEventListener('transitionend', tooltip.updatePos)
   setTimeout(() => {
     for (let parent = elem.parentNode; parent && parent.nodeType === Node.ELEMENT_NODE; parent = parent.parentNode) {
       const style = getComputedStyle(parent)
       if (style.overflowY == 'scroll' || style.overflowY == 'auto') {
         parent.addEventListener('scroll', function() {
-          const style = getComputedStyle(elem.tooltip)
+          const style = getComputedStyle(tooltip)
           if (parseFloat(style.fontSize) > 1)
-            elem.tooltip.updatePos()
+            tooltip.updatePos()
         })
       }
     }
   }, 1)
+  return tooltip
 }

@@ -1,11 +1,11 @@
 @use "sass:map"
 @use "sass:color"
-$colors:('pink':#F47, 'red':#B00, 'blue':#00B, 'cyan':#0BB, 'lightBlue':#07F)
-$sels:('pink':#2AF, 'red':#25F, 'blue':#E46, 'cyan':#E57, 'lightBlue':#0CC)
+$colors:('pink':#F47, 'red':#B00, 'blue':#00B, 'cyan':#0BB, 'lightBlue':#07F, 'black':#000)
+$sels:('pink':#2AF, 'red':#25F, 'blue':#E46, 'cyan':#E57, 'lightBlue':#0CC, 'black':#000)
 
-$dark-colors:('cyan':#0FF, 'lightBlue':#4BF, 'blue':#55F, 'red':#F44, 'pink':#F47)
-$dark-bgs:('cyan':#122, 'lightBlue':#113, 'blue':#113, 'red':#300, 'pink':#313)
-$dark-sels:('cyan':#35F, 'lightBlue':#0EC, 'blue':#0FF, 'red':#F80, 'pink':#2AF)
+$dark-colors:('cyan':#0FF, 'lightBlue':#4BF, 'blue':#55F, 'red':#F44, 'pink':#F47, 'white':#FFF)
+$dark-bgs:('cyan':#123, 'lightBlue':#113, 'blue':#113, 'red':#300, 'pink':#312, 'white':#000)
+$dark-sels:('cyan':#35F, 'lightBlue':#0EC, 'blue':#0FF, 'red':#F80, 'pink':#2AF, 'white':#FFF)
 html
   @each $name, $color in $colors
     --#{$name}: #{$color}
@@ -13,9 +13,8 @@ html
   @each $name, $color in $dark-colors
     --dark-#{$name}: #{$color}
     --dark-#{$name}Sel: #{map.get($dark-sels, $name)}
-    --colorful-#{$name}Bg: #{color.change(map.get($dark-bgs, $name), $lightness: 20%)}
-    --dark-#{$name}Bg: #{color.change(map.get($dark-bgs, $name), $lightness: 15%)}
-    --darker-#{$name}Bg: #{color.change(map.get($dark-bgs, $name), $lightness: 10%)}
+    --dark-#{$name}Bg: #{color.change(map.get($dark-bgs, $name), $lightness: 20%)}
+    --darker-#{$name}Bg: #{color.change(map.get($dark-bgs, $name), $lightness: 14%)}
   /* foreground */
   --darkFg:#FFF
   --lightFg:#000

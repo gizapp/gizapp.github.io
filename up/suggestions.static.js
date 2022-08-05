@@ -13,7 +13,6 @@ suggestions.updateChild = function(type, item, i) {
   for (; suggestions.children[i] && suggestions.children[i].classList.contains('hidden'); i++);
   const existing = suggestions.children[i]
   if (existing != null) {
-    console.log(existing.type, existing.textElem.innerText, item.text+suggestions.suffix, similar(existing.textElem.innerText, item.text+suggestions.suffix))
     if (existing.type === type && similar(existing.textElem.innerText, item.text+suggestions.suffix)) {
       existing.setItem(item, suggestions.suffix)
       return ++i
@@ -21,7 +20,7 @@ suggestions.updateChild = function(type, item, i) {
       suggestions.animatedRemoveChild(existing)
     }
   }
-  const elem = suggestionCreator[type]()
+  const elem = suggestions.creator[type]()
   elem.setItem(item, suggestions.suffix)
   elem.type = type
   suggestions.insertBefore(elem, suggestions.children[i])
@@ -42,12 +41,17 @@ suggestions.childUpdater = function() {
   return {next, stop}
 }
 function appendCmd(text) {
+  if (text === '') return
+  if (text.includes(' ') || text.includes('"') || text.includes("'")) {
+    text = '"' +  text.replaceAll('\\', '\\\\').replaceAll('"', '\\"') + '"'
+  }
   let cmd = input.innerText
-  if (suggestions.errList.find(item => item.text.startsWith('unexpected ')))
-    cmd = cmd.trim().substring(0, cmd.lastIndexOf(' '))
-  cmd = cmd.trim()
-  if (cmd !== '')
-    cmd += ' '
-  text = text.trim()
-  input.changeText(text !== '' ? cmd + text + ' ' : cmd)
+  if (suggestions.errList.length > 0) {
+    input.changeText(cmd.slice(0, suggestions.errList[0].start) + text + cmd.slice(suggestions.errList[0].end))
+  } else {
+    console.log(cmd, text)
+    if (cmd.trim() !== '' && !cmd.endsWith(' '))
+      cmd += ' '
+    input.changeText(cmd + text + ' ')
+  }
 }

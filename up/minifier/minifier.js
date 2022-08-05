@@ -33,7 +33,7 @@ fs.readFile("../index.html", 'utf8', function (err, data) {
     const script = fs.readFileSync('../' + match[1], 'utf8')
     data = data.replaceAll(match[0], '<style>' + script + '</style>')
   }
-  data = data.replaceAll('</script><script>', '\n')
+  data = data.replaceAll('</script><script>', '\n').replaceAll('</style><style>', '\n')
   data = minify(data, minifyOptions);
   if (data.includes('<script src'))
     throw 'unparsed script'

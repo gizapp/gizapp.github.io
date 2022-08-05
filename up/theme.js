@@ -1,27 +1,42 @@
 'use strict';
-const colorList = ['pink', 'blue', 'red', 'lightBlue', 'cyan']
-let themeColor = 'blue'
-let themeBg = 'dark'
+const colorList = ['pink', 'blue', 'red', 'lightBlue', 'cyan', 'black', 'white']
 const theme = document.documentElement.style
 function setTheme({color, background}={}) {
+  const unchanged = background == null && color == null
   if (background != null)
-    themeBg = background
-  const prefix = themeBg !== 'white' ? 'dark-' : ''
+    localStorage.themeBg = background
+  background = localStorage['themeBg'] || 'white'
+  const prefix = background !== 'white' ? 'dark-' : ''
   if (color != null)
-    themeColor = color
-  theme.setProperty('--color1', `var(--${prefix + themeColor})`)
-  theme.setProperty('--selColor', `var(--${prefix + themeColor}Sel)`)
+    localStorage.themeColor = color
+  color = localStorage['themeColor'] || 'lightBlue'
+  if (!rootStyle.getPropertyValue(`--${prefix + color}`))
+    return [true, 'Invalid theme!']
+  theme.setProperty('--color1', `var(--${prefix + color})`)
+  theme.setProperty('--selColor', `var(--${prefix + color}Sel)`)
   theme.setProperty('--colorFg', `var(--${prefix ? 'dark' : 'light'}Fg)`)
-  if (themeBg !== 'white') {
-    if (themeBg === 'black')
+  if (background !== 'white') {
+    if (background === 'black')
       theme.setProperty('--colorBg', 'black')
     else
-      theme.setProperty('--colorBg', `var(--${themeBg}-${themeColor}Bg)`)
+      theme.setProperty('--colorBg', `var(--${background}-${color}Bg)`)
   } else
     theme.setProperty('--colorBg', 'white')
-  updateIcons()
-  return 'Theme changed!'
+  return [false, unchanged ? 'Theme refreshed' : 'Theme changed!']
+}
+function setLocalColor(elem, color) {
+  const background = localStorage.themeBg || 'white'
+  elem.style.setProperty('--localColor', (color || null) && `var(--${background !== 'white' ? 'dark-' : ''}${color})`)
+  elem.style.setProperty('--localBg', (color || null) && `var(--${background}-${color}Bg)`)
 }
 const rootStyle = getComputedStyle(document.documentElement)
-setTimeout(() => setTheme({color:themeColor, background:themeBg}), 1)
+theme.transition = 'none'
+if (setTheme()[0]) {
+  delete localStorage.themeBg
+  delete localStorage.themeColor
+  setTheme()
+}
+setTimeout(() => {
+  theme.transition = null
+}, 1)
 

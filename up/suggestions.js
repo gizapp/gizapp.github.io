@@ -5,23 +5,17 @@ function createPlain() {
   elem.appendChild(text)
   elem.textElem = text
   makeTooltipTrigger(elem)
-  elem.onclick = () => appendCmd(text.innerText)
+  elem.onclick = () => appendCmd(text.innerText.trim())
   elem.setPlain = elem.setItem = function(item, suffix) {
     elem.textElem.innerText = item.text + suffix
     if (item.help)
       elem.tooltip.innerText = item.help
     elem.classList.toggle('tooltiptrigger', !!item.help)
-    if (item.color == null) {
-      elem.style.setProperty('--localColor',  null)
-      elem.style.setProperty('--localBg',  null)
-    } else {
-      elem.style.setProperty('--localColor', `var(--${themeBg !== 'white' ? 'dark-' : ''}${item.color})`)
-      elem.style.setProperty('--localBg', `var(--${themeBg}-${item.color}Bg)`)
-    }
+    setLocalColor(elem, item.color)
   }
   return elem
 }
-const suggestionCreator = {
+suggestions.creator = {
   plain:createPlain,
   error:function() {
     const elem = createPlain()
@@ -29,7 +23,7 @@ const suggestionCreator = {
     elem.onclick = function() {
       const range = document.createRange()
       range.setStart(input.childNodes[0], elem.range[0])
-      range.setEnd(input.childNodes[0], elem.range[1] - 1)
+      range.setEnd(input.childNodes[0], elem.range[1])
       const sel = window.getSelection()
       sel.removeAllRanges()
       sel.addRange(range)
@@ -41,16 +35,19 @@ const suggestionCreator = {
     return elem
   },
   input:function() {
-    const param = suggestionCreator.plain()
+    const elem = suggestions.creator.plain()
+    elem.activeTooltip = elem.tooltip
+    elem.activeTooltip.classList.toggle('inactive', true)
+    makeTooltipTrigger(elem)
     const input = document.createElement('span')
     input.id = 'input'
     input.contentEditable = true
-    param.input = input
-    param.appendChild(input)
+    elem.input = input
+    elem.appendChild(input)
     function trigger() {
-      const paramName = param.textElem.innerText
-      if (!paramName.includes('<'))
-        appendCmd(paramName)
+      const elemName = elem.textElem.innerText
+      if (!elemName.includes('<'))
+        appendCmd(elemName.trim())
       appendCmd(input.innerText)
     }
     input.onkeydown = function(e) {
@@ -60,54 +57,50 @@ const suggestionCreator = {
       if (e.keyCode === enterKey && input.innerText.trim !== '')
         trigger()
     }
-    const enterBtn = document.createElement('span')
-    enterBtn.innerText = nonbreakSpace + nonbreakSpace + nonbreakSpace + nonbreakSpace
-    enterBtn.className = 'icon'
-    enterBtn.style.backgroundImage = 'var(--icon-enter)'
+    const enterBtn = createIcon('enter')
     enterBtn.id = 'enter'
-    makeTooltipTrigger(enterBtn, '', param)
     enterBtn.onclick = function(e) {
       trigger()
       e.stopPropagation()
     }
-    param.enterBtn = enterBtn
-    param.appendChild(enterBtn)
+    elem.enterBtn = enterBtn
+    elem.appendChild(enterBtn)
     input.onmousedown = e => e.inputClick = true
-    param.onmousedown = function(e)/*hold-focus*/{
-      if (param.classList.contains('active') && !e.inputClick)
+    elem.onmousedown = function(e)/*hold-focus*/{
+      if (elem.classList.contains('active') && !e.inputClick)
         e.preventDefault()
     }
-    param.onclick = function() {
-      if (!param.classList.contains('active'))/*param-deploy*/{
-        if (param.noInput) {
-          appendCmd(param.textElem.innerText)
+    elem.onclick = function() {
+      if (!elem.classList.contains('active'))/*param-deploy*/{
+        if (elem.noInput) {
+          appendCmd(elem.textElem.innerText.trim())
         } else {
-          input.innerText = param.suggestion
-          param.classList.toggle('active', true)
-          param.classList.toggle('tooltiptrigger', false)
-          setTimeout(() => param.enterBtn.triggerTooltip(2500), medAnimTime)
+          input.innerText = elem.suggestion
+          elem.classList.toggle('active', true)
+          elem.activeTooltip.classList.toggle('inactive', false)
+          elem.tooltip.classList.toggle('inactive', true)
+          setTimeout(() => elem.triggerTooltip(), medAnimTime)
           selectElement(input)
         }
       }
     }
     input.onblur = function() {
-      param.classList.toggle('active', false)
-      param.classList.toggle('tooltiptrigger', true)
-      param.enterBtn.classList.toggle('triggered', false)
+      elem.classList.toggle('active', false)
+      elem.activeTooltip.classList.toggle('inactive', true)
+      elem.tooltip.classList.toggle('inactive', false)
     }
-    param.setItem = function(item, suffix) {
-      param.setPlain(item, suffix)
-      param.suggestion = item.suggestion
+    elem.setItem = function(item, suffix) {
+      elem.setPlain(item, suffix)
+      elem.suggestion = item.suggestion
       const type = item.type
       if (!type.noInput) {
         let inputHelp = ''
         inputHelp = 'enter ' + type.desc
-        param.enterBtn.tooltip.innerText = inputHelp
-        param.enterBtn.classList.toggle('tooltiptrigger', !!inputHelp)
+        elem.activeTooltip.innerText = inputHelp
       } else
-        param.noInput = type.noInput
+        elem.noInput = type.noInput
     }
-    return param
+    return elem
     // param-deploy: check if the parameter is not already deployed. If so, deploy its content
     // hold-focus: if the parameter is deployed and a click lands outside the input but inside the param, cancel that click and keep the focus of the input so that the undeploy listener isn't triggered
   },
@@ -121,14 +114,14 @@ const suggestionCreator = {
       } else {
         elem.choices = []
         for (const choiceItem of elem.options) {
-          const choice = suggestionCreator.plain()
+          const choice = suggestions.creator.plain()
           choice.setItem(choiceItem, suggestions.suffix)
           suggestions.insertBefore(choice, elem)
           choice.onclick = function() {
             const paramName = elem.textElem.innerText
             if (!paramName.includes('<'))
-              appendCmd(paramName)
-            appendCmd(choice.textElem.innerText)
+              appendCmd(paramName.trim())
+            appendCmd(choice.textElem.innerText.trim())
           }
           elem.choices.push(choice)
         }

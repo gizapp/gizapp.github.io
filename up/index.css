@@ -5,7 +5,7 @@ html {
   -moz-osx-font-smoothing:grayscale;
   --animTime:0.2s;
   --medAnimTime:0.35s;
-  --longAnimTime:2s;
+  --longAnimTime:3s;
   --longTransition:cubic-bezier(0.9, 0, 0.1, 1);
   stroke-linecap:round;
   stroke-linejoin:round;
@@ -13,8 +13,10 @@ html {
   font-weight:370;
   background:var(--colorBg);
   color:var(--colorFg);
-  transition:all var(--longAnimTime) ease;
+  transition:all var(--longAnimTime) linear;
   overflow-x:hidden;
+  stroke:var(--color1);
+  fill:var(--colorBg);
 }
 body{
   margin:0;
@@ -66,15 +68,23 @@ body{
   font-variation-settings: 'MONO' 1;
   padding:0 0.3em;
 }
-#shell > .button {
-  background-image:var(--icon-enter);
-}
-#shell.valid > .button {
-  background-image:var(--bg-icon-enter);
-  background-color:var(--color1);
-}
-#shell.empty > .button {
+#shell > .button.hidden {
   opacity:0;
+  background-color:transparent;
+  font-size:0;
+  pointer-events:none;
+}
+#shell.valid > #enter {
+  background-color:var(--color1);
+  margin-right:0.5em;
+  padding-left:0.2em;
+  stroke:var(--colorBg);
+  fill:var(--colorFg);
+}
+#shell.empty > #enter {
+  opacity:0;
+  background-color:transparent;
+  font-size:0;
   pointer-events:none;
 }
 #shell > .button > .hidden {
@@ -115,6 +125,8 @@ hr {
   white-space:break-spaces;
 }
 #suggestions {
+  --localColor:var(--color1);
+  --localBg:var(--color1Bg);
   transition:all var(--animTime) ease;
   padding:0.3em 0;
   overflow-x:auto;
@@ -123,8 +135,7 @@ hr {
   white-space:nowrap;
   min-height:1.3em;
   max-height:1.3em;
-  --localColor:var(--color1);
-  --localBg:var(--color1Bg);
+  stroke:var(--localColor);
 }
 #suggestions:empty {
   min-height:0;
@@ -177,6 +188,9 @@ hr {
   font-size:0;
   color:var(--colorFg);
 }
+#suggestions > span > #enter {
+  display:none;
+}
 #suggestions > span.active > #input {
   font-size:1em;
 }
@@ -186,12 +200,6 @@ hr {
 }
 #suggestions > span.active > #text {
   font-size:0;
-}
-#suggestions > span > #enter {
-  background-repeat:no-repeat;
-  background-position:right;
-  user-select:none;
-  display:none;
 }
 #suggestions > span.active > #enter {
   display:unset;
@@ -215,10 +223,8 @@ hr {
   border-radius:0.3em;
   cursor:pointer;
   background-color:transparent;
-  padding:0 0.2em;
+  padding:0 0.1em;
   border:0.1em solid transparent;
-  background-position:right;
-  background-origin:content-box;
   font-weight:400;
 }
 .button:hover {
@@ -229,11 +235,8 @@ hr {
   background-color:var(--color1);
   border-color:var(--color1);
   font-weight:900;
-}
-.icon {
-  background-repeat:no-repeat;
-  background-size:1em;
-  user-select:none;
+  stroke:var(--colorBg);
+  fill:var(--color1);
 }
 .title {
   color:var(--color1);
@@ -251,6 +254,13 @@ hr {
   padding-top:0;
   overflow-wrap:anywhere;
 }
+.shellBuffer > div .hoverAppear {
+  transition:all var(--animTime) linear;
+  opacity:0;
+}
+.shellBuffer > div:hover .hoverAppear, .shellBuffer > div .triggered.hoverAppear {
+  opacity:1;
+}
 .shellBuffer > div:hover {
   font-weight:600;
 }
@@ -259,6 +269,9 @@ hr {
 }
 .shellBuffer > div.selected {
   font-weight:800;
+}
+.shellBuffer .button {
+  padding-bottom:0.2em;
 }
 .bufferMap {
   width:1rem;
@@ -276,6 +289,7 @@ hr {
 #cmdBuffer {
   min-width:7em;
   font-variation-settings: 'MONO' 1;
+  white-space:break-spaces;
 }
 .subtext {
   font-variation-settings: 'slnt' -15, 'CASL' 1;
@@ -283,4 +297,32 @@ hr {
 }
 .subtext.tooltiptrigger {
   cursor:help;
+}
+.inline-icon {
+  height:1em;
+  vertical-align:middle;
+  stroke-width:6;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+#doubleBuffer .hidable .coveredOnly {
+  display:none;
+}
+#doubleBuffer .hidable #text {
+  transition: all var(--medAnimTime) ease;
+}
+#doubleBuffer .hidable #cover {
+  transition: all var(--medAnimTime) ease;
+  font-size:0;
+}
+#doubleBuffer.hiding .hidable .coveredOnly {
+  display:unset;
+}
+#doubleBuffer.hiding .hidable #text {
+  transition: all var(--medAnimTime) ease;
+  font-size:0;
+}
+#doubleBuffer.hiding .hidable #cover {
+  transition: all var(--medAnimTime) ease;
+  font-size:1em;
 }

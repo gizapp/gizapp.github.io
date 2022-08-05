@@ -22,7 +22,11 @@ html{
   line-height:1;
   max-width:10em;
 }
-.tooltiptrigger:hover > .tooltip, .triggered > .tooltip {
+.tooltip.serious {
+  font-variation-settings: 'CASL' 0, 'slnt' 0;
+}
+html:not(.tooltipForceTriggered) .tooltiptrigger:hover > .tooltip:not(.inactive),
+.triggered > .tooltip:not(.inactive) {
   transition-duration:var(--longAnimTime);
   transition-timing-function:var(--longTransition);
   font-size:var(--tooltipFont);
@@ -31,7 +35,7 @@ html{
   border-color:var(--colorFg);
   background:var(--colorBg);
 }
-.triggered > .tooltip {
+.triggered > .tooltip:not(.inactive) {
   transition-duration:var(--medAnimTime);
   transition-timing-function:ease-out;
   z-index:1001;

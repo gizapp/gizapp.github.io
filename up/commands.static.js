@@ -12,6 +12,7 @@ const paramType = {
     check:val => false,
   },
   string:{
+    desc:'a string',
     parse:val => val,
     check:val => false,
   },
@@ -81,6 +82,7 @@ function getExclusions(command, name) {
   return result
 }
 function processCmd(text, commands, result) {
+  console.log(text)
   let cmdObj = null
   result.paramValues = {}
   let noSuggestions = false
@@ -97,18 +99,14 @@ function processCmd(text, commands, result) {
   let expectingParamName = null
   let excludedParams = []
   result.errorArr = []
-  let position = 0
-  let start = 0
+  result.hidables = []
   let commandStart = 0
   let commandEnd = 0
   function addError(text, help) {
-    result.errorArr.push({text, help, start, end:position})
+    result.errorArr.push({text, help, start, end})
   }
-  text.split(/\s/).forEach((word, i) => {
-    start = position
-    position += word.length + 1
-    word = word.trim()
-    if (word === '') return
+  let i = 0
+  for (var [word, start, end] of tokenize(text)) {
     if (result.errorArr.length > 0)
       noSuggestions = true
     if (expectingParamName) {
@@ -118,17 +116,19 @@ function processCmd(text, commands, result) {
         if (param.type.check(word))
           addError(`${expectingParamName} must be ${param.type.shortDesc}`, `parameter ${expectingParamName} must be ${param.type.desc}`)
         result.paramValues[expectingParamName] = word
+        if (param.hidable)
+          result.hidables.push([start, end])
         expectingParamName = null
-        return
+        continue
       } else
         addError(`expecting value for "${expectingParamName}"`)
     }
     if (cmdObj.children && word in cmdObj.children) {
       commandStart = start
-      commandEnd = position
+      commandEnd = end
       excludedParams.push(...getExclusions(cmdObj, word))
       setCurrentCmd(cmdObj.children[word])
-      return
+      continue
     } else if (paramNames) {
       if (word.startsWith('--')) {
         word = word.substring(2)
@@ -141,7 +141,7 @@ function processCmd(text, commands, result) {
           if (word in cmdObj.defaultParam || param.required)
             expectingParamName = word
         } else addError(`unknown switch --${word}`)
-        return
+        continue
       } else {
         for (; paramIndex < paramNames.length; paramIndex++) {
           const paramName = paramNames[paramIndex]
@@ -153,18 +153,21 @@ function processCmd(text, commands, result) {
             else
               excludedParams.push(...getExclusions(cmdObj, paramName))
             result.paramValues[paramName] = word
+            if (param.hidable)
+              result.hidables.push([start, end])
             word = null
             paramIndex++
             break
           }
         }
-        if (word == null) return
+        if (word == null) continue
       }
     }
     addError(`unexpected "${word}"`)
-  })
+    i++
+  }
   start = commandStart
-  position = commandEnd
+  end = commandEnd
   for (const param in cmdObj.param)
     if (!(param in result.paramValues) && cmdObj.param[param].required)
       addError('expecting value for ' + param)
@@ -177,7 +180,6 @@ function processCmd(text, commands, result) {
       names.push(...Object.keys(cmdObj.children).map(item => ['plain', item]))
     for (const prioritized of cmdObj.prioritizedParam) {
       const index = names.findIndex(item => item[1] === prioritized)
-      console.log(prioritized, index)
       if (index >= 0) names.unshift(...names.splice(index, 1))
     }
     let firstPositional = true
