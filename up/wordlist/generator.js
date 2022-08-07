@@ -83,21 +83,25 @@ generator.nounGroup.randChain = function({bitCount, groupSize}={}) {
   let groupCount = 0
   let targetChoices = 2n ** BigInt(bitCount)
   let currentChoices = 1n
+  console.log(groupSize)
   let groupChoices = generator.nounGroup.choices[groupSize]
   while (currentChoices < targetChoices) {
     groupCount += 1
     currentChoices *= groupChoices
   }
+  console.log(groupCount, groupSize)
   groupSize = 0
   currentChoices = 1n
   while (currentChoices < targetChoices) {
     groupSize += 1
     currentChoices = generator.nounGroup.choices[groupSize] ** BigInt(groupCount)
   }
+  console.log(groupCount, groupSize)
   currentChoices /= generator.nounGroup.choices[groupSize]
   targetChoices /= currentChoices
   let firstGroupSize = 1
   for (;generator.nounGroup.choices[firstGroupSize] <= targetChoices; firstGroupSize++);
+  console.log(groupCount, groupSize, firstGroupSize)
 
   let result = generator.nounGroup.rand(firstGroupSize)
   for (let i = 1; i < groupCount; i++)
@@ -145,7 +149,7 @@ generator.minEntropy = function({bitCount, encodingObj}={}) {
   }
   currentChoices /= generator.nounGroup.choices[groupSize]
   targetChoices /= currentChoices
-  firstGroupSize = 2
+  firstGroupSize = groupCount > 1 ? 2 : 1
   for (;generator.nounGroup.choices[firstGroupSize] <= targetChoices; firstGroupSize++);
   return [generator.phrase.rand(groupCount, groupSize, firstGroupSize, encodingObj), currentChoices * generator.nounGroup.choices[firstGroupSize]]
 }
@@ -219,7 +223,12 @@ generator.decode = function({input}={}) {
   while (true) {
     const nounCenter = findCharIndex(input, pos, '-', nonbreakHyphen)
     if (nounCenter < 0) {
-      errors = 'invalid phrase'
+      input = input.trim()
+      const val = wordlist.noun.findIndex(item => item[0] === input || item[1] === input)
+      if (val >= 0)
+        num = BigInt(val)
+      else
+        errors = 'invalid phrase'
       break
     }
     const groupEnd = findCharIndex(input, nounCenter + 1, ' ', nonbreakSpace)

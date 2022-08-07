@@ -25,8 +25,8 @@ html {
   --darker-blueBg: #121236;
   --dark-red: #F44;
   --dark-redSel: #F80;
-  --dark-redBg: #660000;
-  --darker-redBg: #470000;
+  --dark-redBg: #4d1a1a;
+  --darker-redBg: #361212;
   --dark-pink: #F47;
   --dark-pinkSel: #2AF;
   --dark-pinkBg: #4d1a33;
@@ -39,8 +39,8 @@ html {
   --darkFg:#FFF;
   --lightFg:#000;
   /* ACTIVE */
-  --color1:var(--dark-blue);
-  --selColor:var(--dark-blueSel);
-  --colorBg:var(--dark-blueBg);
+  --color1:var(--dark-lightBlue);
+  --selColor:var(--dark-lightBlueSel);
+  --colorBg:var(--darker-lightBlueBg);
   --colorFg:var(--darkFg);
 }
