@@ -81,7 +81,7 @@ body{
   stroke:var(--colorBg);
   fill:var(--colorFg);
 }
-#shell.empty > #enter {
+#shell.empty > .button {
   opacity:0;
   background-color:transparent;
   font-size:0;
@@ -107,7 +107,9 @@ hr {
   margin:1em 0;
 }
 #shellPrefix > .hidden {
-  transition:all var(--medAnimTime) ease;
+  transition-property:all;
+  transition-duration:var(--medAnimTime);
+  transition-timing-function:ease;
   font-size:0;
   font-variation-settings: 'CASL' 1, 'slnt' -15;
 }

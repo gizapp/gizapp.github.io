@@ -166,8 +166,8 @@ function processCmd(text, commands, result) {
     addError(`unexpected "${word}"`)
     i++
   }
-  start = commandStart
-  end = commandEnd
+  start = text.length
+  end = text.length
   for (const param in cmdObj.param)
     if (!(param in result.paramValues) && cmdObj.param[param].required)
       addError('expecting value for ' + param)
