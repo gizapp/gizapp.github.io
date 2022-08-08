@@ -1,3 +1,4 @@
+'use strict';
 function createPlain() {
   const elem = document.createElement('span')
   const text = document.createElement('span')

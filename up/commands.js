@@ -1,3 +1,4 @@
+'use strict';
 const formatGeneratorResult = base => props => {
   const output = base(props)
   return ['hidable', output[0], `${Math.round(log2(output[1], 16)*100)/100} bits`, `that's out of ${output[1].toLocaleString()} posible passwords`]

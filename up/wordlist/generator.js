@@ -1,3 +1,4 @@
+'use strict';
 const generator = {nounGroup:{}, phrase:{}}
 for (const key in wordlist)
   wordlist[key] = wordlist[key].split(';')
@@ -53,7 +54,7 @@ generator.nounGroup.rand = function(size, encodingObj) {
   assert(size >= 1 && size <= 5)
   let noun = randChoice(wordlist.noun, encodingObj)
   if (size === 1) return noun[1]
-  noun2 = randChoice(wordlist.firstnoun, encodingObj)
+  let noun2 = randChoice(wordlist.firstnoun, encodingObj)
   noun = noun.map(word => `${noun2}-${word}`)
   if (size === 2) return noun[1]
   let result = randChoice(wordlist.adjective, encodingObj) + ' '
@@ -149,7 +150,7 @@ generator.minEntropy = function({bitCount, encodingObj}={}) {
   }
   currentChoices /= generator.nounGroup.choices[groupSize]
   targetChoices /= currentChoices
-  firstGroupSize = groupCount > 1 ? 2 : 1
+  let firstGroupSize = groupCount > 1 ? 2 : 1
   for (;generator.nounGroup.choices[firstGroupSize] <= targetChoices; firstGroupSize++);
   return [generator.phrase.rand(groupCount, groupSize, firstGroupSize, encodingObj), currentChoices * generator.nounGroup.choices[firstGroupSize]]
 }
