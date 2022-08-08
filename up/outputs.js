@@ -39,6 +39,7 @@ outputs.creators = {
     return elem
   },
   hidable:(text, subtext, tooltip) => {
+    input.toggleHideBtn.classList.remove('emptyHidden')
     const elem = outputs.createPlain(text + ' ')
     elem.classList.add('hidable')
     const coveredText = document.createElement('span')
