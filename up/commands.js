@@ -4,7 +4,8 @@ const formatGeneratorResult = base => props => {
 }
 const formatStatusResult = (base, type='plain') => props => {
   const output = base(props)
-  return [output[0] ? 'error' : type, output[1]]
+  output[0] = output[0] ? 'error' : type
+  return output
 }
 input.commands = {children:{
   generate:{
@@ -66,7 +67,7 @@ input.commands = {children:{
     },
   },
   theme:{
-    base:formatStatusResult(setTheme),
+    base:formatStatusResult(setTheme, 'subtext'),
     help:'set the theme of the page',
     defaultParam:{color:null, background:null},
     param:{

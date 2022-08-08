@@ -11,19 +11,29 @@ function updateFavicon(color) {
   let darkMode = window.matchMedia ? window.matchMedia('(prefers-color-scheme:dark)').matches : false
   let svg = faviconTemplate.replaceAll('{color2}', style.getPropertyValue('--' + (darkMode ? 'dark-' : '') + color)).replaceAll('{color1}', darkMode ? '#FFF' : '#000')
   favicon.href = 'data:image/svg+xml,' + encodeURIComponent(svg)
+  return darkMode
 }
-if (window.matchMedia)
+if (window.matchMedia) {
   window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', e=>updateFavicon(localStorage.themeColor))
+  let darkMode = window.matchMedia('(prefers-color-scheme:dark)').matches
+  if (darkMode !== (localStorage.themeBg !== 'white'))
+    localStorage.themeBg = darkMode ? 'darker' : 'white'
+}
 const colorList = ['pink', 'blue', 'red', 'lightBlue', 'cyan', 'black', 'white']
 const theme = document.documentElement.style
 function setTheme({color, background}={}) {
-  const unchanged = background == null && color == null
-  if (background != null)
+  let unchanged = true
+  if (background != null && background !== localStorage.themeBg) {
     localStorage.themeBg = background
+    unchanged = false
+  }
   background = localStorage['themeBg'] || 'darker'
-  const prefix = background !== 'white' ? 'dark-' : ''
-  if (color != null)
+  const currDarkMode = background !== 'white'
+  const prefix = currDarkMode ? 'dark-' : ''
+  if (color != null && color !== localStorage.themeColor) {
     localStorage.themeColor = color
+    unchanged = false
+  }
   color = localStorage['themeColor'] || 'lightBlue'
   if (!rootStyle.getPropertyValue(`--${prefix + color}`))
     return [true, 'Invalid theme!']
@@ -37,8 +47,11 @@ function setTheme({color, background}={}) {
       theme.setProperty('--colorBg', `var(--${background}-${color}Bg)`)
   } else
     theme.setProperty('--colorBg', 'white')
-  updateFavicon(color)
-  return [false, unchanged ? 'Theme refreshed' : 'Theme changed!']
+  const sysDarkMode = updateFavicon(color)
+  const msg = unchanged ? 'Theme refreshed' : 'Theme changed!'
+  if (window.matchMedia && currDarkMode !== sysDarkMode)
+    return [false, msg, 'inconsistent with system theme', `the page will switch to a ${sysDarkMode ? 'dark' : 'light'} theme when refreshed to match with the system theme`]
+  return [false, msg]
 }
 function setLocalColor(elem, color) {
   const background = localStorage.themeBg || 'white'

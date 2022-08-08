@@ -19,19 +19,22 @@ outputs.creators = {
     return elem
   },
   subtext:(text, subtext, tooltip) => {
+    console.log(text, subtext, tooltip)
     const elem = outputs.createPlain(text)
-    let subElem = document.createElement('span')
-    subElem.className = 'subtext'
-    subElem.innerText = ' - '
-    elem.appendChild(subElem)
-    subElem = document.createElement('span')
-    subElem.className = 'subtext'
-    subElem.innerText = subtext
-    if (tooltip != null) {
-      makeTooltipTrigger(subElem)
-      subElem.tooltip.innerText = tooltip
+    if (subtext != null) {
+      let subElem = document.createElement('span')
+      subElem.className = 'subtext'
+      subElem.innerText = ' - '
+      elem.appendChild(subElem)
+      subElem = document.createElement('span')
+      subElem.className = 'subtext'
+      subElem.innerText = subtext
+      if (tooltip != null) {
+        makeTooltipTrigger(subElem)
+        subElem.tooltip.innerText = tooltip
+      }
+      elem.appendChild(subElem)
     }
-    elem.appendChild(subElem)
     return elem
   },
   hidable:(text, subtext, tooltip) => {

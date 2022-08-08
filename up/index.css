@@ -35,8 +35,8 @@ body{
   100% {transform:translateX(0);font-size:1em;opacity:1}
 }
 @keyframes cooldown {
-  0% {color:var(--colorFg)}
-  100% {color:var(--color1)}
+  0% {color:var(--colorFg);font-weight:600}
+  100% {color:var(--color1);font-weight:400}
 }
 ::-webkit-scrollbar {
   width: 0.5em;
@@ -62,6 +62,11 @@ body{
   color:var(--colorBg);
   background:var(--selColor);
 }
+hr {
+  background:var(--color1);
+  border-color:transparent;
+  margin:1em 0;
+}
 #shell {
   width:max-content;
   max-width:100%;
@@ -81,8 +86,7 @@ body{
   stroke:var(--colorBg);
   fill:var(--colorFg);
 }
-#shell.empty > .button {
-  opacity:0;
+#shell.empty > .emptyHidden {
   background-color:transparent;
   font-size:0;
   pointer-events:none;
@@ -97,26 +101,30 @@ body{
   color:var(--colorBg);
 }
 #shellPrefix {
+  transition-property:all;
+  transition-duration:var(--medAnimTime);
+  transition-timing-function:ease-in;
   color:var(--color1);
-  transition:all var(--animTime) ease;
-  font-variation-settings: 'CASL' 0;
+  font-variation-settings: 'CASL' 0, 'slnt' 0, 'CRSV' 0;
 }
-hr {
-  background:var(--color1);
-  border-color:transparent;
-  margin:1em 0;
+#shellPrefix:hover {
+  transition-duration:var(--longAnimTime);
+  transition-timing-function:var(--longTransition);
+  font-variation-settings: 'CASL' 1, 'slnt' -15, 'CRSV' 0;
+  font-weight:600;
 }
 #shellPrefix > .hidden {
   transition-property:all;
   transition-duration:var(--medAnimTime);
-  transition-timing-function:ease;
+  transition-timing-function:ease-in;
   font-size:0;
-  font-variation-settings: 'CASL' 1, 'slnt' -15;
+  font-variation-settings: 'CASL' 1, 'slnt' -15, 'CRSV' 0;
 }
 #shellPrefix:hover > .hidden {
   transition-duration:var(--longAnimTime);
   transition-timing-function:var(--longTransition);
   font-size:1em;
+  font-weight:600;
 }
 #root > * {
   margin: 1rem 0;
@@ -125,6 +133,7 @@ hr {
 #shellInput {
   transition:max-width var(--animTime) ease-in-out;
   white-space:break-spaces;
+  font-weight:600;
 }
 #suggestions {
   --localColor:var(--color1);
@@ -147,6 +156,7 @@ hr {
 }
 #suggestions.hot {
   --localColor:var(--colorFg);
+  font-weight:600;
 }
 #suggestions > span {
   animation: var(--medAnimTime) ease-out 0s 1 growIn;
@@ -240,17 +250,13 @@ hr {
   stroke:var(--colorBg);
   fill:var(--color1);
 }
-.title {
-  color:var(--color1);
-  font-weight:bold;
-}
 .shellBuffer {
   display:flex;
   flex-direction:column;
   width: fit-content;
 }
 .shellBuffer > div {
-  animation: var(--medAnimTime) ease-out 0s 1 fadeInLeft, var(--longAnimTime) linear 0s 1 cooldown;
+  animation: var(--medAnimTime) ease-out 0s 1 fadeInLeft, var(--longAnimTime) ease-in 0s 1 cooldown;
   transition:all var(--animTime) ease;
   padding:1em 0.3rem;
   padding-top:0;
@@ -327,4 +333,10 @@ hr {
 #doubleBuffer.hiding .hidable #cover {
   transition: all var(--medAnimTime) ease;
   font-size:1em;
+}
+#resultBuffer > div {
+  font-variation-settings: 'CASL' 1;
+}
+#resultBuffer > div:hover {
+  font-variation-settings: 'CASL' 0;
 }
