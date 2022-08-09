@@ -11,9 +11,10 @@ let dynamicManifest = {
 }
 const manifestElem = document.querySelector("link[rel~='manifest']");
 document.addEventListener('themechange', e => {
-  dynamicManifest.background_color = rootStyle.getPropertyValue('--colorBg').replaceAll('#', '%23')
-  dynamicManifest.theme_color = rootStyle.getPropertyValue('--color1').replaceAll('#', '%23')
-  dynamicManifest.icons = [{src:processIcon(iconTemplate, e.color, e.darkMode).replaceAll('%','%25'), sizes:'any', purpose:'maskable'}]
-  const urlManifest = 'data:application/manifest+json,' + JSON.stringify(dynamicManifest)
-  manifestElem.href = urlManifest
+  dynamicManifest.background_color = rootStyle.getPropertyValue('--colorBg')
+  dynamicManifest.theme_color = rootStyle.getPropertyValue('--color1')
+  dynamicManifest.icons = [{src:processIcon(iconTemplate, e.color, e.darkMode), sizes:'any', purpose:'maskable'}]
+  const blob = new Blob([JSON.stringify(dynamicManifest)], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(blob);
+  manifestElem.href = manifestURL
 })
