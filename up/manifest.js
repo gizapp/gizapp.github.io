@@ -13,7 +13,7 @@ const manifestElem = document.querySelector("link[rel~='manifest']");
 document.addEventListener('themechange', e => {
   dynamicManifest.background_color = rootStyle.getPropertyValue('--colorBg').replaceAll('#', '%23')
   dynamicManifest.theme_color = rootStyle.getPropertyValue('--color1').replaceAll('#', '%23')
-  dynamicManifest.icons = [{src:processIcon(iconTemplate, e.color, e.darkMode).replaceAll('%','%25'), sizes:'any', purpose:'maskable any'}]
+  dynamicManifest.icons = [{src:processIcon(iconTemplate, e.color, e.darkMode).replaceAll('%','%25'), sizes:'any', purpose:'maskable'}]
   const urlManifest = 'data:application/manifest+json,' + JSON.stringify(dynamicManifest)
   manifestElem.href = urlManifest
 })
