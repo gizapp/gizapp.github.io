@@ -8,7 +8,8 @@ let favicon = document.querySelector("link[rel~='icon']");
 let themeColor = document.querySelector("meta[name~='theme-color']");
 let processIcon = (template, color, darkMode) => 'data:image/svg+xml,' + encodeURIComponent(template
     .replaceAll('{color2}', rootStyle.getPropertyValue(`--${darkMode ? 'dark-' : ''}${color}`))
-    .replaceAll('{color1}', darkMode ? '#FFF' : '#000'))
+    .replaceAll('{color1}', darkMode ? '#FFF' : '#000')
+    .replaceAll('{colorBg}', darkMode ? rootStyle.getPropertyValue(`--darker-${color}Bg`) : 'white'))
 const updateFavicon = e => {
   themeColor.content = rootStyle.getPropertyValue('--color1')
   favicon.href = processIcon(faviconTemplate, e.color, e.darkMode)
