@@ -1,9 +1,9 @@
 'use strict';
 const ThemeChangeEvent = () => {
   const event = new Event('themechange')
-  event.background = localStorage.themeBg || 'darker'
-  event.color = localStorage.themeColor || 'lightBlue'
   event.darkMode = window.matchMedia ? window.matchMedia('(prefers-color-scheme:dark)').matches : false
+  event.background = localStorage.themeBg || (event.darkMode ? 'darker' : 'white')
+  event.color = localStorage.themeColor || 'lightBlue'
   return event
 }
 const colorList = ['pink', 'blue', 'red', 'lightBlue', 'cyan', 'black', 'white']

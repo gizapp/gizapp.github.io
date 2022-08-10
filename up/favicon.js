@@ -16,7 +16,7 @@ const updateFavicon = e => {
 if (window.matchMedia) {
   window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', e=>updateFavicon(ThemeChangeEvent()))
   let darkMode = window.matchMedia('(prefers-color-scheme:dark)').matches
-  if (darkMode !== (localStorage.themeBg !== 'white'))
+  if (localStorage.themeBg && darkMode !== (localStorage.themeBg !== 'white'))
     localStorage.themeBg = darkMode ? 'darker' : 'white'
 }
 document.addEventListener('themechange', updateFavicon)
