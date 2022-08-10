@@ -69,6 +69,7 @@ hr {
   background:var(--color1);
   border-color:transparent;
   margin:1em 0;
+  border-bottom:0;
 }
 #shell {
   width:max-content;
@@ -103,27 +104,27 @@ hr {
   background-color:var(--color1);
   color:var(--colorBg);
 }
-#shellPrefix {
+#shell > .prefix {
   transition-property:all;
   transition-duration:var(--medAnimTime);
   transition-timing-function:ease-in;
   color:var(--color1);
   font-variation-settings: 'CASL' 0, 'slnt' 0, 'CRSV' 0;
 }
-#shellPrefix:hover {
+#shell > .prefix:hover {
   transition-duration:var(--longAnimTime);
   transition-timing-function:var(--longTransition);
   font-variation-settings: 'CASL' 1, 'slnt' -15, 'CRSV' 0;
   font-weight:600;
 }
-#shellPrefix > .hidden {
+#shell > .prefix > .hidden {
   transition-property:all;
   transition-duration:var(--medAnimTime);
   transition-timing-function:ease-in;
   font-size:0;
   font-variation-settings: 'CASL' 1, 'slnt' -15, 'CRSV' 0;
 }
-#shellPrefix:hover > .hidden {
+#shell > .prefix:hover > .hidden {
   transition-duration:var(--longAnimTime);
   transition-timing-function:var(--longTransition);
   font-size:1em;
@@ -133,7 +134,7 @@ hr {
   margin: 1rem 0;
   margin-top:0.3em;
 }
-#shellInput {
+#shell > .input {
   transition:max-width var(--animTime) ease-in-out;
   white-space:break-spaces;
   font-weight:600;
@@ -241,6 +242,7 @@ hr {
   padding:0 0.1em;
   border:1px solid transparent;
   font-weight:400;
+  display:inline;
 }
 .button:hover {
   border-color:var(--color1);
@@ -297,7 +299,7 @@ hr {
   border-left:1px solid var(--colorFg);
   margin:0 0.5em;
 }
-#cmdBuffer {
+.shellBuffer.cmd {
   min-width:7em;
   font-variation-settings: 'MONO' 1;
   white-space:break-spaces;
@@ -337,9 +339,9 @@ hr {
   transition: all var(--medAnimTime) ease;
   font-size:1em;
 }
-#resultBuffer > div {
+.shellBuffer.result > div {
   font-variation-settings: 'CASL' 1;
 }
-#resultBuffer > div:hover {
+.shellBuffer.result > div:hover {
   font-variation-settings: 'CASL' 0;
 }

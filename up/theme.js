@@ -10,11 +10,11 @@ const colorList = ['pink', 'blue', 'red', 'lightBlue', 'cyan', 'black', 'white']
 const theme = document.documentElement.style
 function setTheme({color, background}={}) {
   let unchanged = true
-  if (background != null && background !== localStorage.themeBg) {
+  if (background != null && background != localStorage.themeBg) {
     localStorage.themeBg = background
     unchanged = false
   }
-  if (color != null && color !== localStorage.themeColor) {
+  if (color != null && color != localStorage.themeColor) {
     localStorage.themeColor = color
     unchanged = false
   }

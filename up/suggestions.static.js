@@ -1,6 +1,6 @@
 'use strict';
-const suggestions = document.scripts[document.scripts.length - 1].parentNode;
-suggestions.removeChild(suggestions.lastChild)
+const suggestions = document.getElementById('suggestions')
+suggestions.textContent = ''
 suggestions.animatedRemoveChild = function(child) {
   if (child.classList.contains('hidden')) return
   child.classList.add('hidden')
