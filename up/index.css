@@ -167,7 +167,7 @@ hr {
   color:var(--localColor);
   background-color:var(--localBg);
   border-radius:0.3em;
-  border:0.1em solid var(--localColor);
+  border:1px solid var(--localColor);
   cursor:pointer;
   padding:0.2em 0 0.2em 0.2em;
   margin:0 0.2em;
@@ -239,7 +239,7 @@ hr {
   cursor:pointer;
   background-color:transparent;
   padding:0 0.1em;
-  border:0.1em solid transparent;
+  border:1px solid transparent;
   font-weight:400;
 }
 .button:hover {
