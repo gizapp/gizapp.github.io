@@ -7,7 +7,7 @@ let dynamicManifest = {
   categories:['productivity', 'security'],
   display:'fullscreen',
   orientation:'any',
-  start_url:'http://localhost:8080/prod/up.html',
+  start_url:'https://gizapp.github.io/prod/up.html',
 }
 const manifestElem = document.querySelector("link[rel~='manifest']");
 document.addEventListener('themechange', e => {
