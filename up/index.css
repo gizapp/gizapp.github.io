@@ -77,7 +77,7 @@ hr {
   font-variation-settings: 'MONO' 1;
   padding:0 0.3em;
 }
-#shell > .button.hidden {
+#shell > .button.hidden, #shell.empty > .emptyHidden {
   opacity:0;
   background-color:transparent;
   font-size:0;
@@ -89,11 +89,6 @@ hr {
   padding-left:0.2em;
   stroke:var(--colorBg);
   fill:var(--colorFg);
-}
-#shell.empty > .emptyHidden {
-  background-color:transparent;
-  font-size:0;
-  pointer-events:none;
 }
 #shell > .button > .hidden {
   transition:all var(--animTime) ease;

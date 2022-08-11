@@ -1,7 +1,7 @@
 'use strict';
 const manifestElem = document.querySelector("link[rel~='manifest']");
 document.addEventListener('themechange', e => {
-  dynamicManifest.background_color = rootStyle.getPropertyValue('--colorBg')
+  dynamicManifest.background_color = rootStyle.getPropertyValue('--color1')
   dynamicManifest.theme_color = rootStyle.getPropertyValue('--color1')
   dynamicManifest.icons = [{
     src:processIcon(iconTemplate, e.color, e.darkMode),
