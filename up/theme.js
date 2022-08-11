@@ -40,6 +40,7 @@ function setLocalColor(elem, color) {
   elem.style.setProperty('--localBg', (color || null) && `var(--${background}-${color}Bg)`)
 }
 let rootStyle = getComputedStyle(document.documentElement)
+const medAnimTime = parseFloat(rootStyle.getPropertyValue('--medAnimTime'))*1000
 theme.transition = 'none' // avoid-initial-transition
 if (setTheme()[0]) {
   delete localStorage.themeBg
