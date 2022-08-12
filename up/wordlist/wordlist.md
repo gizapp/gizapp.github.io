@@ -3316,7 +3316,6 @@ chair chairs
 chairlady chairladies
 chairman chairmen
 chairperson chairpersons
-chairwoman chairwomen
 chalice chalices
 chalk chalks
 chambermaid chambermaids
@@ -3361,7 +3360,6 @@ city cities
 claw claws
 cleaner cleaners cleaning
 clergyman clergymen
-clergywoman clergywomen
 clerk clerks
 cliff cliffs
 climatologist climatologists
@@ -3489,7 +3487,6 @@ deathbed deathbeds
 decathlete decathletes
 defender defenders
 deliveryman deliverymen
-deliverywoman deliverywomen
 demigod demigods
 demographer demographers
 demolitionist demolitionists
@@ -3637,7 +3634,6 @@ financier financiers financing
 finger fingers
 firefighter firefighters firefighting
 fireman firemen
-firewoman firewomen
 fish fishes
 fishmonger fishmongers fishmonging
 flag flags
@@ -3688,7 +3684,6 @@ geneticist geneticists
 genius geniuses
 gentleman gentlemen
 geologist geologists
-german germans
 ghost ghosts
 ghostbuster ghostbusters ghostbusting
 ghostwriter ghostwriters ghostwriting
@@ -3766,10 +3761,8 @@ handbag handbags
 handcuff handcuffs
 handgun handguns
 handiman handimen
-handiwoman handiwomen
 handmaid handmaids
 handwriting handwritings
-handyman handymen
 hare hares
 harpoon harpoons
 harvester harvesters harvesting
@@ -3789,7 +3782,6 @@ helper helpers helping
 hemlock hemlocks
 hen hens
 henchman henchmen
-henchwoman henchwomen
 heptagon heptagons
 herald heralds
 herb herbs
@@ -3806,7 +3798,6 @@ hippie hippies
 hippo hippos
 historian historians
 hitman hitmen
-hitwoman hitwomen
 hive hives
 hobo hobos
 hoe hoes
@@ -4019,7 +4010,6 @@ mariner mariners
 marker markers
 market markets
 marksman marksmen
-markswoman markswomen
 marshal marshals
 marshmallow marshmallows
 mask masks
@@ -4599,7 +4589,6 @@ string strings
 structure structures
 student students
 stuntman stuntmen
-stuntwoman stuntwomen
 stylist stylists
 submarine submarines
 submariner submariners

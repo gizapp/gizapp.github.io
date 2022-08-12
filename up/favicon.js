@@ -4,6 +4,7 @@ const myEncodeURI = text => encodeURIComponent(text)
   .replaceAll('%3A', ':').replaceAll('%3D', '=')
   .replaceAll('%3C', '<').replaceAll('%3E', '>')
 let favicon = document.querySelector("link[rel~='icon']");
+let previewElem = document.querySelector("meta[property~='og:image']");
 let themeColor = document.querySelector("meta[name~='theme-color']");
 let processIcon = (template, color, darkMode) => 'data:image/svg+xml,' + myEncodeURI(template
     .replaceAll('{color1}', rootStyle.getPropertyValue(`--${darkMode ? 'dark-' : ''}${color}`))
