@@ -1,5 +1,7 @@
 'use strict';
 const manifestElem = document.querySelector("link[rel~='manifest']");
+const descriptionElem = document.querySelector("meta[name~='description']");
+descriptionElem.content = dynamicManifest.description
 document.addEventListener('themechange', e => {
   dynamicManifest.background_color = rootStyle.getPropertyValue('--color1')
   dynamicManifest.theme_color = rootStyle.getPropertyValue('--color1')

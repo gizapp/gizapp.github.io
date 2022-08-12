@@ -6,7 +6,7 @@ const previewImg = '<svg xmlns="http://www.w3.org/2000/svg" width="1320" height=
 let dynamicManifest = {
   name:'Understandable Passwords',
   short_name:'UPass',
-  description:"Understandable password generator!",
+  description:"The tool to generate strong and easily memorizable passwords",
   categories:['productivity', 'security'],
   display:'fullscreen',
   orientation:'any',
