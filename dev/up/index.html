@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang='en' xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
+  <head>
+    <meta name='theme-color'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:image" content="https://gizapp.github.io/prod/up.png" />
+    <meta property="og:image:secure_url" content="https://gizapp.github.io/prod/up.png" />
+    <meta property="og:image:type" content="image/png"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    <meta property="og:image:alt" content="The main interface of Understandable Passwords" />
+    <meta property="og:description" content="The tool to generate strong and easily memorizable passwords"/>
+    <meta property="og:title" content="Understandable Passwords"/>
+    <link rel='stylesheet' href='color.css'>
+    <link rel='stylesheet' href='index.css'>
+    <link rel='stylesheet' href='tooltip.css'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap'>
+    <link rel="icon">
+    <link rel="manifest">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id='root'>
+      <div id='suggestions'></div>
+      <div id='shell' class='empty'>
+        <span class='prefix' onclick='input.resetSelection()'>
+          <span class='hidden'>Understandable </span>Passwords&gt;
+        </span>
+        <span class='input unstyled' contenteditable spellcheck='false'></span>&nbsp;
+        <div class='button emptyHidden insert-icon-enter' id='enter' onclick='this.parentNode.sendCommand()'>
+          <span class='hidden'>run </span>
+        </div>
+        <div class='button insert-icon-down' onclick='input.onnavigate(-1)'></div>
+        <div class='button insert-icon-up' onclick='input.onnavigate(1)'></div>
+        <div class='button insert-icon-eye-open emptyHidden' onclick='input.toggleHide()'></div>
+      </div>
+      <hr/>
+      <div id='doubleBuffer'>
+        <div class='shellBuffer cmd'></div>
+        <div class='shellBuffer result'></div>
+      </div>
+
+      <script>
+        'use strict';
+        if (navigator.serviceWorker)
+          navigator.serviceWorker.register('../common/sw.js')
+
+        function selectElement(elem) {
+          const range = document.createRange();
+          range.selectNodeContents(elem);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+        function assert(condition, message) {
+          if (!condition) {
+            throw new Error(message || 'Assertion failed');
+          }
+        }
+        const nonbreakSpace = '\u00A0'
+        function similar(word1, word2) {
+          if (word1.length > word2.length) {
+            const tmp = word2
+            word2 = word1
+            word1 = tmp
+          } else if (word1.length == word2.length) {
+            for (let i = 0, error = 0; i < word1.length; i++)
+              if (word1[i] !== word2[i])
+                if (++error > 3)
+                  return false
+            return true
+          }
+          for (let i = 0, delta = 0; i < word2.length; i++)
+            if (word1[i - delta] !== word2[i])
+              if (++delta > 3)
+                return false
+          return true;
+        }
+        function log2(value, accuracy=20) {
+          let int = 0n
+          for (let tmp = value; tmp > 1n; tmp >>= 1n, int++);
+          let result = Number(int)
+          let threshold = 1n << BigInt(int)
+          const sizeLimit = 2 ** accuracy
+          for (let unit = 1, size = Number(int); value != 0; unit++, size *= 2) {
+            if (value === threshold) break
+            if (size > sizeLimit*2) {
+              threshold >>= BigInt(size - sizeLimit)
+              value >>= BigInt(size - sizeLimit)
+              size = sizeLimit
+            }
+            value *= value
+            threshold *= threshold
+            if (value > threshold * 2n) {
+              result += 2 ** -unit
+              threshold <<= 1n
+              size++
+            }
+          }
+          return result
+        }
+        const byClass = (parent, name) => parent.getElementsByClassName(name)[0]
+      </script>
+      <script src='custom.js'></script>
+      <script src='favicon.js'></script>
+      <script src='manifest.js'></script>
+      <script src='theme.js'></script>
+      <script src='tooltip.js'></script>
+      <script src='icon.js'></script>
+      <script src='tokenize.js'></script>
+      <script src='suggestions.static.js'></script>
+      <script src='suggestions.js'></script>
+      <script>
+        'use strict';
+        const doubleBuffer = document.getElementById('doubleBuffer')
+        const cmdBuffer = byClass(doubleBuffer, 'cmd')
+        const outputs = byClass(doubleBuffer, 'result')
+        doubleBuffer.cachedCmd = {}
+        doubleBuffer.selected = null
+        cmdBuffer.count = 0
+        cmdBuffer.elemClick = function()/*func-required*/{
+          if (window.getSelection().toString() === '')
+            doubleBuffer.setSelected(Number(this.id.substring(1)))
+        }
+        cmdBuffer.add = function(command, hidables) {
+          const elem = document.createElement('div')
+          elem.command = command
+          let pos = 0
+          if (hidables.length > 0) {
+            elem.className = 'hidable'
+            for (const [start, end] of hidables) {
+              elem.appendChild(document.createTextNode(command.substring(pos, start)))
+              let cover = document.createElement('span')
+              cover.id = 'cover'
+              cover.innerText = '"··'
+              elem.appendChild(cover)
+              const hidden = document.createElement('span')
+              hidden.id = 'text'
+              hidden.innerText = command.substring(start, end)
+              elem.appendChild(hidden)
+              cover = document.createElement('span')
+              cover.id = 'cover'
+              cover.innerText = '··"'
+              elem.appendChild(cover)
+              pos = end
+            }
+          }
+          elem.appendChild(document.createTextNode(command.substring(pos)))
+          elem.id = 'c' + this.count++
+          elem.onclick = this.elemClick
+          this.prepend(elem)
+          return elem
+        }
+        outputs.count = 0
+        outputs.add = (type, ...args) => outputs.prepend(outputs.creators[type](...args))
+        doubleBuffer.setSelected = function(value) {
+          if (doubleBuffer.cachedCmd[this.selected] != null && doubleBuffer.cachedCmd[this.selected] != input.innerText)
+            doubleBuffer.cachedCmd[this.selected] = input.innerText
+          if (this.selected != null) {
+            cmdBuffer.querySelector('#c' + this.selected)?.classList?.toggle('selected', false)
+            outputs.querySelector('#c' + this.selected)?.classList?.toggle('selected', false)
+          }
+          let newSel = null
+          if (value != null) {
+            if (value < 0) value = 0
+            newSel = cmdBuffer.querySelector('#c' + value)
+            newSel?.classList?.toggle('selected', true)
+            outputs.querySelector('#c' + value)?.classList?.toggle('selected', true)
+            if (!(value in doubleBuffer.cachedCmd))
+              doubleBuffer.cachedCmd[value] = newSel?.command
+            input.changeText(doubleBuffer.cachedCmd[value] || '')
+          }
+          this.selected = value
+        }
+        // func-required: the function uses 'this' and is meant to be assigned to other element's click event, it can't be converted to a lambda expression
+      </script>
+      <script src='outputs.js'></script>
+      <script src='wordlist/wordlist.js'></script>
+      <script src='commands.static.js'></script>
+      <script>
+        'use strict';
+        const shell = document.getElementById('shell')
+        const input = byClass(shell, 'input')
+        input.shellPrefix = byClass(shell, 'prefix')
+        input.navUp = byClass(shell, 'insert-icon-up')
+        input.navDown = byClass(shell, 'insert-icon-down')
+        input.toggleHideBtn = byClass(shell, 'insert-icon-eye-open')
+        shell.sendCommand = function() {
+          if (input.innerText.trim().length > 0) {
+            this.oncommand(input.innerText)
+            input.changeText('')
+            for (const member in doubleBuffer.cachedCmd) delete doubleBuffer.cachedCmd[member]
+          } else {
+            input.focus()
+          }
+        }
+        input.resetSelection = function () {
+          // Select the end of input text
+          input.focus()
+          if (input.innerText) {
+            const range = document.createRange();
+            range.selectNodeContents(input);
+            range.setStart(range.startContainer, 1)
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        }
+        input.resetSelection()
+        function bgClick(e) {
+          if (e.target == this)
+            input.resetSelection()
+        }
+        root.addEventListener('click', bgClick)
+        const enterKey = 13
+        const downKey = 40
+        const upKey = 38
+        input.onkeydown = function(e)/*Intercept Enter, Up, and Down key*/{
+          if ([enterKey, upKey, downKey].includes(e.keyCode))
+            e.preventDefault()
+        }
+        input.changeText = function(text) {
+          text = text.replaceAll('\u2011', '-').replaceAll(nonbreakSpace, ' ')
+          this.innerText = text
+          this.onchange(text)
+          input.resetSelection()
+        }
+        input.onkeyup = function(e) {
+          if (e.keyCode === enterKey) {
+            this.parentNode.sendCommand()
+            e.preventDefault()
+          }
+          if (e.keyCode === downKey) this.onnavigate(-1)
+          if (e.keyCode === upKey) this.onnavigate(1)
+          this.onchange(this.innerText)
+        }
+        input.onblur = () => input.onchange(input.innerText)
+        setTimeout(() =>
+          input.toggleHideAnim = {true:input.toggleHideBtn.querySelector('#close'), false:input.toggleHideBtn.querySelector('#open')}
+        , 1)
+        input.hideResult = false
+        input.toggleHide = () => {
+          input.hideResult = !input.hideResult
+          doubleBuffer.classList.toggle('hiding', input.hideResult)
+          input.toggleHideAnim[input.hideResult].beginElement()
+        }
+        input.updateArrow = function() {
+          if (doubleBuffer.selected == null) {
+            this.navUp.classList.add('hidden')
+            this.navDown.classList.toggle('hidden', cmdBuffer.count <= 0)
+          } else {
+            this.navUp.classList.remove('hidden')
+            this.navDown.classList.remove('hidden')
+            if (doubleBuffer.selected === 0)
+              this.navDown.classList.add('hidden')
+            if (doubleBuffer.selected >= cmdBuffer.count)
+              this.navUp.classList.add('hidden')
+          }
+        }
+        input.onnavigate = function(delta) {
+          let selected = doubleBuffer.selected
+          if (selected == null) {
+            if (delta < 0 && cmdBuffer.count > 0) {
+              selected = cmdBuffer.count + delta
+              cmdBuffer.draftCommand = input.innerText
+            }
+          } else if (selected + delta >= -1)
+            selected += delta
+          if (selected >= cmdBuffer.count) {
+            doubleBuffer.setSelected(null)
+            input.changeText(cmdBuffer.draftCommand || '')
+          } else if (selected !== null)
+            doubleBuffer.setSelected(selected)
+          input.updateArrow()
+        }
+        input.onchange = function(text) {
+          if (text == input.oldCmd) return
+          input.oldCmd = text
+          input.updateArrow()
+          processCmd(text, input.commands, input)
+          const empty = !text.trim()
+          shell.classList.toggle('empty', empty)
+          suggestions.classList.toggle('hot', empty)
+          const noError = input.errorArr.length === 0
+          shell.classList.toggle('valid', noError && !empty)
+          let updater = suggestions.childUpdater()
+          for (const item of input.errorArr) updater.next('error', item)
+          for (const item of input.paramArr) updater.next(...item)
+          updater.stop()
+        }
+        shell.oncommand = function(cmd) {
+          cmd = cmd.trimEnd().trimStart()
+          cmdBuffer.add(cmd, input.hidables)
+          input.onchange(cmd)
+          if (input.errorArr.length > 0) {
+            outputs.add('error', input.errorArr.map(item => item.text).join(', '))
+          } else {
+            try {
+              const output = input.cmdObj.base(input.paramValues)
+              outputs.add(...output)
+            } catch (error) {
+              console.error(error)
+              outputs.add('unknown error, see console')
+            }
+          }
+        }
+      </script>
+      <script src='wordlist/generator.js'></script>
+      <script src='commands.js'></script>
+    </div>
+  </body>
+</html>

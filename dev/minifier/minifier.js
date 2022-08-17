@@ -38,5 +38,5 @@ fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
   data = minify(data, minifyOptions);
   if (data.includes('<script src'))
     throw 'unparsed script'
-  fs.writeFile(`../prod/${appName}.html`, data, err => {if(err)throw err;});
+  fs.writeFile(`../../${appName}/index.html`, data, err => {if(err)throw err;});
 });
