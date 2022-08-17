@@ -2,6 +2,9 @@ var minify = require('html-minifier').minify;
 var fs = require("fs");
 
 const appName = process.argv[2]
+require(`../${appName}/custom.js`) // custom.js is expected to define the global variables dynamicManifest and minifierProps
+customProps = {...dynamicManifest, ...minifierProps}
+
 const minifyOptions = {
   collapseWhitespace:true,
   collapseBooleanAttributes:true,
@@ -34,6 +37,20 @@ fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
     const script = fs.readFileSync(`../${appName}/` + match[1], 'utf8')
     data = data.replaceAll(match[0], '<style>' + script + '</style>')
   }
+  const updateMeta = (property, manifestProp) =>
+    data = data.replaceAll(`<meta property="${property}">`, `<meta property="${property}" content="${customProps[manifestProp]}">`)
+      .replaceAll(`<meta name="${property}">`, `<meta name="${property}" content="${customProps[manifestProp]}">`)
+  updateMeta('og:title', 'name')
+  updateMeta('og:description', 'description')
+  updateMeta('og:image', 'previewImg')
+  updateMeta('og:image:width', 'previewImgWidth')
+  updateMeta('og:image:height', 'previewImgHeight')
+  updateMeta('og:image:alt', 'previewImgAlt')
+
+  updateMeta('twitter:title', 'name')
+  updateMeta('twitter:description', 'description')
+  updateMeta('twitter:image', 'previewImg')
+
   data = data.replaceAll('</script><script>', '\n').replaceAll('</style><style>', '\n')
   data = minify(data, minifyOptions);
   if (data.includes('<script src'))
