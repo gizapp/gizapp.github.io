@@ -1,4 +1,5 @@
 #!/bin/bash
 ./minify
-git commit -m '[build]' -- up/index.html
+git add up/index.html
+git commit -m '[build]'
 git push
