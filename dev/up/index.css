@@ -1,7 +1,7 @@
 html {
   margin:1em;
   margin-top:1.5em;
-  font-family:-apple-system, BlinkMacSystemFont, 'Recursive', 'Courier New', monospace;
+  font-family:'Recursive', -apple-system, BlinkMacSystemFont, 'Courier New', monospace;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   --animTime:0.2s;
@@ -130,6 +130,7 @@ h4 {
   max-width:100%;
   font-variation-settings: 'MONO' 1;
   padding:0 0.3em;
+  font-size:1.1em;
 }
 #shell > .button.hidden, #shell.empty > .emptyHidden {
   opacity:0;
@@ -192,6 +193,7 @@ h4 {
 #suggestions {
   --localColor:var(--color1);
   --localBg:var(--color1Bg);
+  font-size:1.1em;
   transition:all var(--animTime) ease;
   padding:0.3em 0;
   overflow-x:auto;
