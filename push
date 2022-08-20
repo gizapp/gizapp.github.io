@@ -1,0 +1,4 @@
+#!/bin/bash
+./minify
+git commit -m '[build]' -- up/index.html
+git push
