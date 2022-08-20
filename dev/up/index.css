@@ -14,7 +14,7 @@ html {
   font-weight:370;
   background:var(--colorBg);
   color:var(--color1);
-  transition:all var(--longAnimTime) linear;
+  transition:all var(--medAnimTime) linear;
   overflow-x:hidden;
   stroke:var(--color1);
   fill:var(--colorBg);
