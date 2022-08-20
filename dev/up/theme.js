@@ -6,7 +6,7 @@ const ThemeChangeEvent = () => {
   event.color = localStorage.themeColor || 'lightBlue'
   return event
 }
-const colorList = ['pink', 'blue', 'red', 'lightBlue', 'cyan', 'black', 'white']
+const colorList = ['pink', 'blue', 'red', 'lightBlue', 'cyan', 'violet', 'black', 'white']
 const theme = document.documentElement.style
 function setTheme({color, background}={}) {
   let unchanged = true
@@ -23,6 +23,8 @@ function setTheme({color, background}={}) {
   const prefix = currDarkMode ? 'dark-' : ''
   if (!rootStyle.getPropertyValue(`--${prefix + event.color}`))
     return [true, 'Invalid theme!']
+  for (const c of colorList)
+    theme.setProperty(`--theme-${c}`, `var(--${prefix + c})`)
   theme.setProperty('--color1', `var(--${prefix + event.color})`)
   theme.setProperty('--selColor', `var(--${prefix + event.color}Sel)`)
   theme.setProperty('--colorFg', `var(--${prefix ? 'dark' : 'light'}Fg)`)

@@ -7,7 +7,7 @@ let favicon = document.querySelector("link[rel~='icon']");
 let previewElem = document.querySelector("meta[property~='og:image']");
 let themeColor = document.querySelector("meta[name~='theme-color']");
 let processIcon = (template, color, darkMode) => 'data:image/svg+xml,' + myEncodeURI(template
-    .replaceAll('{color1}', rootStyle.getPropertyValue(`--${darkMode ? 'dark-' : ''}${color}`))
+    .replaceAll('{color1}', rootStyle.getPropertyValue(`--theme-${color}`))
     .replaceAll('{colorFg}', darkMode ? '#FFF' : '#000')
     .replaceAll('{colorBg}', darkMode ? rootStyle.getPropertyValue(`--darker-${color}Bg`) : 'white'))
 const updateFavicon = e => {

@@ -1,7 +1,7 @@
 'use strict';
 function updateIcon(elem, icon, animatedState) {
   elem.setAttribute('viewBox', '0 0 64 64')
-  elem.classList.add('inline-icon')
+  elem.classList.add('inlineIcon')
   if (icon in animatedIconPaths) {
     let path = document.createElementNS("http://www.w3.org/2000/svg", 'path')
     path.setAttribute('d', animatedIconPaths[icon]._static)
@@ -33,17 +33,30 @@ function updateIcon(elem, icon, animatedState) {
 function createIcon(icon, animatedState) {
   return updateIcon(document.createElementNS("http://www.w3.org/2000/svg", 'svg'), icon, animatedState)
 }
-setTimeout(() => {
+window.addEventListener('load', () => {
   for (const icon in iconPaths)
     for (const elem of document.querySelectorAll('.insert-icon-' + icon))
       elem.appendChild(createIcon(icon))
+  for (const icon in iconPaths)
+    for (const elem of document.querySelectorAll('.prepend-icon-' + icon))
+      elem.prepend(createIcon(icon))
   for (const group in animatedIconPaths)
     for (const item in animatedIconPaths[group])
       for (const elem of document.querySelectorAll(`.insert-icon-${group}-${item}`))
         elem.appendChild(createIcon(group, item))
-}, 1)
+})
 
-const iconPaths = {enter:'M26,29 12,43 26,57M49,10V43H12', error:'m52,12 -40,40m0,-40 40,40', doubleExcl:'m42,56v-2h2 v2zM43,43V8M20,56v-2h2v2zM21,43V8', up:'M32,54V12M52,32 32,12 12,32', down:'M32,10V52M52,32 32,52 12,32', left:'M54,32H12M32,52 12,32 32,12', right:'M10,32H52M32,52 52,32 32,12'}
+const iconPaths = {
+  enter:'M26,29 12,43 26,57M49,10V43H12',
+  error:'m52,12 -40,40m0,-40 40,40',
+  doubleExcl:'m42,56v-2h2 v2zM43,43V8M20,56v-2h2v2zM21,43V8',
+  up:'M32,54V12M52,32 32,12 12,32',
+  down:'M32,10V52M52,32 32,52 12,32',
+  left:'M54,32H12M32,52 12,32 32,12',
+  right:'M10,32H52M32,52 52,32 32,12',
+  email:'M11 12A6 6 0 0 0 7.4 22.8L25 36q7 5.25 14 0L56.6 22.8A6 6 0 0 0 53 12ZM44.333 32 56.6 41.2A6 6 0 0 1 53 52H11A6 6 0 0 1 7.4 41.2L19.667 32M59 18V46M5 46V18',
+  github:'M 32,4 C 16.53,4 4,16.53 4,32 c 0,12.39 8.015,22.855 19.145,26.565 1.4,0.245 1.925,-0.595 1.925,-1.33 0,-0.665 -0.035,-2.87 -0.035,-5.215 C 18,53.315 16.18,50.305 15.62,48.73 15.305,47.925 13.94,45.44 12.75,44.775 11.77,44.25 10.37,42.955 12.715,42.92 c 2.205,-0.035 3.78,2.03 4.305,2.87 2.52,4.235 6.545,3.045 8.155,2.31 0.245,-1.82 0.98,-3.045 1.785,-3.745 -6.23,-0.7 -12.74,-3.115 -12.74,-13.825 0,-3.045 1.085,-5.565 2.87,-7.525 -0.28,-0.7 -1.26,-3.57 0.28,-7.42 0,0 2.345,-0.735 7.7,2.87 2.24,-0.63 4.62,-0.945 7,-0.945 2.38,0 4.76,0.315 7,0.945 5.355,-3.64 7.7,-2.87 7.7,-2.87 1.54,3.85 0.56,6.72 0.28,7.42 1.785,1.96 2.87,4.445 2.87,7.525 0,10.745 -6.545,13.125 -12.775,13.825 1.015,0.875 1.89,2.555 1.89,5.18 0,3.745 -0.035,6.755 -0.035,7.7 0,0.735 0.525,1.61 1.925,1.33 A 28.0455,28.0455 0 0 0 60,32 C 60,16.53 47.47,4 32,4 Z',
+}
 const animatedIconPaths = {
   eye:{
     _static:'M39,32C39,36 36,39 32,39 28,39 25,36 25,32 25,28 28,25 32,25 36,25 39,28 39,32ZM32,14C16,14 10,32 10,32 10,32 16,50 32,50 48,50 54,32 54,32 54,32 48,14 32,14Z',

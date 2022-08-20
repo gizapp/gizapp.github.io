@@ -47,24 +47,6 @@ input.commands = {children:{
           }
         },
       },
-      nounChain:{
-        base:formatGeneratorResult(generator.nounGroup.randChain),
-        help:'generate a chain of noun groups with a target number of bits of entropy',
-        defaultParam:{groupSize:2},
-        param:{
-          bitCount:{
-            type:paramType.intFrom(1),
-            positional:true,
-            required:true,
-            suggestion:64,
-            help:'the target number of bits',
-          },
-          groupSize:{
-            type:paramType.intFrom(1),
-            help:'maximum group size for the noun groups',
-          },
-        },
-      },
     },
   },
   theme:{

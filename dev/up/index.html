@@ -17,10 +17,10 @@
     <meta name='twitter:title'>
     <meta name='twitter:description'>
     <meta name='twitter:image'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap'>
     <link rel='stylesheet' href='color.css'>
     <link rel='stylesheet' href='index.css'>
     <link rel='stylesheet' href='tooltip.css'>
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap'>
     <link rel='icon'>
     <link rel='manifest'>
     <title></title>
@@ -31,7 +31,7 @@
       <div id='suggestions'></div>
       <div id='shell' class='empty'>
         <span class='prefix' onclick='input.resetSelection()'>
-          <span class='hidden'>Understandable </span>Passwords&gt;
+          U<span class='hidden'>nderstandable </span>Pass<span class='hidden'>words</span>&gt;
         </span>
         <span class='input unstyled' contenteditable spellcheck='false'></span>&nbsp;
         <div class='button emptyHidden insert-icon-enter' id='enter' onclick='this.parentNode.sendCommand()'>
@@ -159,7 +159,9 @@
           return elem
         }
         outputs.count = 0
-        outputs.add = (type, ...args) => outputs.prepend(outputs.creators[type](...args))
+        outputs.add = (type, ...args) => {
+          outputs.prepend(outputs.creators[type](...args))
+        }
         doubleBuffer.setSelected = function(value) {
           if (doubleBuffer.cachedCmd[this.selected] != null && doubleBuffer.cachedCmd[this.selected] != input.innerText)
             doubleBuffer.cachedCmd[this.selected] = input.innerText
@@ -311,9 +313,68 @@
             }
           }
         }
+        function addCommand() {
+          input.changeText(this.innerText + ' ')
+          window.scrollTo(0, 0)
+        }
+        window.addEventListener('load', () => {
+          for (const elem of document.getElementsByTagName('cmd'))
+            elem.onclick = addCommand
+        })
       </script>
       <script src='wordlist/generator.js'></script>
       <script src='commands.js'></script>
+    </div>
+
+    <br/>
+    <br/>
+    <div style="width:min(100%,70em)">
+      <h3><span class='subheading'>About</span> Understandable Passwords</h3>
+      <p>
+        Using the <em>same password for multiple accounts</em> and <em>not changing passwords regularly</em> is a mistake made by most internet users, among them are many security enthusiasts. This is simply because <em>better passwords are harder to remember</em> and we don't want to "abandon" our good passwords only to forget the new ones
+      </p>
+      <p>
+        Along with password managers, the way to avoid forgetting your passwords is simply to <em>make your passwords easier to remember!</em> We should ditch the old passwords that had to contain lowercase, uppercase, numeric and <s>nonsense</s> special characters. In fact, <em>Understandable Passwords</em> took it a step further and:
+      </p>
+      <p><strong>
+        Generate random, yet understandable sentences to use as passwords
+      </strong></p>
+      <svg viewBox='0 0 896 640' style='margin:auto;display:block;width:min(100%, 45em);fill:var(--colorFg);stroke:none;font-variation-settings:"CASL" 1'><style>.f{font-weight:300;fill:var(--color1)}.d{font-size:19px}.p{white-space:break-spaces;font-weight:700;font-size:24px;font-variation-settings:"CASL" 0}.r{fill:var(--colorBg);stroke:var(--color1);stroke-width:2}.s{stroke:var(--colorFg)}.c{fill:var(--colorBg);stroke:var(--color1);stroke-width:2}.i{font-size:18px;stroke:var(--colorBg);stroke-width:9;paint-order:stroke fill}.o{font-size:20px;fill:var(--color1)}</style><text class='o' x='24' y='31'>Let's compare passwords to phone numbers</text><rect class='r' width='328' height='244' x='24' y='48'/><path class='r s' d='M325.26 99.292C305.73 124.15 78.698 119.65 67.287 77.059 54.833 30.579 174.55 44.17 213.98 45.251c52.62 1.443 127.97-4.198 114.92 37.317 14.14 13.904 27.4 17.772 27.4 17.772 0 0-18.43 3.87-31.04-1.048z'/><text class='d' style='text-anchor:end' y='72' x='325'>How many phone numbers <tspan dy='1.25em' style=';text-anchor:end' x='325'>can you remember?</tspan></text><text class='p' x='70' y='161'>954-818-2138</text><path class='c' d='m61 167c-0.965 0.51-3.361 6.9-1.108 6.54 20.924-3.33 58.228-0.16 77.128-2.45 29.18-3.53 74.69 5 100-1.94 1.16-0.32 1.32-4.43 1.22-5.54m-83.47 6.51-0.61 7.31'/><text style='font-size:30px;white-space:pre;line-height:1' x='36.541' y='207.26'><tspan><tspan class='f'>log<tspan style='font-size:65%;font-weight:400;baseline-shift:sub;fill:var(--color1)'>2</tspan>10</tspan><tspan style='font-weight:500;font-size:65%;baseline-shift:super'> 10<tspan style='fill-opacity:0.7'> digits</tspan></tspan></tspan><tspan x='36.541' dy='1.4em' style='font-size:24px'><tspan style='font-weight:300;fill:var(--color1)'>≈ </tspan>33<tspan style='font-size:70%;fill-opacity:0.7'> bits of entropy</tspan></tspan></text><path style='fill:none;stroke:var(--colorFg);stroke-width:1' d='m71.897 244.99c2.4 13.63 19.083 17.28 19.083 17.28'/><text style='font-size:16px' x='94.694923' y='265.84338'>terrible password strength</text><rect class='r' width='496' height='244' x='376' y='48'/><text x='311.97794' y='257.70517' transform='rotate(-20.162)' style='font-size:28px;fill:var(--color1)'>727-222-5822</text><text x='563.71619' y='-112.9493' transform='rotate(18.524)' style='font-size:22px;fill:var(--color1)'>818-806-4748</text><text style='font-size:24px;fill:var(--color1)' x='420.36728' y='145.23705'>347-645-7863</text><text x='416.67892' y='18.152773' transform='rotate(19.3)' style='font-size:20px;fill:var(--color1)'>347-645-7863</text><text x='330.75732' y='464.12671' transform='rotate(-34.541)' style='font-size:20px;fill:var(--color1)'>405-754-6931</text><text x='609.89703' y='44.833149' transform='rotate(12.542)' style='font-size:26px;fill:var(--color1)'>985-857-1550</text><path style='fill:var(--colorBg);stroke:var(--colorFg);stroke-width:4' d='m773.81 140.29c-10.66 23.89 15.5 39.09 34.51 26.82 16.39-10.57 6.83-36.27-5.07-38.7-11.25-2.29-24.79 1.46-29.44 11.88z'/><path style='fill:none;stroke:var(--colorFg);stroke-width:4;stroke-linecap:round' d='m769.97 227.74c0.99-5.28 14.97-42.16 19.57-44.92 5.99-3.59 51.7-20.54 50.81-22.14-8.5-15.22-14.18-16.1-26.64-26.34 1.98-2.5-2.32-6.14-4.96-3.86m-48.58 160.36c9.56-21.5 21.02-46.31 28.55-65.87 5.59 22.87 9.65 43.49 14.05 65.87M790.59 172.06c-2.34 21.81-0.82 34.14-1.87 52.91'/><text style='text-anchor:end' class='i' x='861' y='74'>It's exhausting, yet<tspan x='861.32507' dy='1.25em'>you still have a bunch</tspan><tspan x='861' dy='1.25em'>of weak passwords</tspan></text><path class='r s' d='m432.5 240.65c-19.3 66.79 85.04 51.51 164.07 47.63 77.51-3.81 114.81-6.87 128.17-26.48 26.98-39.6-5.3-70.75-119.76-61.45-55.16 4.49-149.36-12.33-166.14 24.22-12.13 2.42-25.37-9.78-25.37-9.78 0 0-2.61 22.23 19.03 25.86z'/><text x='453' y='229' class='d' xml:space='default'>Imagine having to memorize <tspan style='' x='453' dy='1.25em'>a dozen new phone numbers </tspan><tspan x='453' dy='1.25em'>every few months</tspan></text><text y='323' x='24' class='o'>Now how about those <tspan style='font-variation-settings:"CASL" 1, "slnt" -15;'>understandable</tspan> passwords?</text><path style='fill:none;stroke:var(--color1);stroke-width:1.5;stroke-linecap:round' d='m31.55 348.94h83.64v60.78H31.55Z'/><rect class='r' width='328' height='276' x='24' y='340'/><path style='fill:none;stroke:var(--color1);stroke-width:1.5' d='m321.9 604.86c3.54 0.19 22.22 3.07 23.92 1.41m-6.8-31.74c1.19-1.14-23.67 16.17-20.02 13.19m-7.31-31.61c-3.17 3.93-15.85 18.68-13.91 19.02M284.43 543.5c-2.41 7.65-7.24 16.94-8.79 22.62m-24.2-22.76c-4.03 4.95-4.67 11.66-7.76 17.04m-25.67-15.44c-0.33 6.91-5.86 13.23-5.86 20.07M181.53 541.6c1.33 6.34-1.66 13.71 0.1 19.13m-42.36-18.97c1.68 7.96 0.5 16.51 2.81 21.84m-37.45-21.95c4.13 5.43 4.23 17.93 5.36 22.34M74.244 574.87C70.091 572.63 60.557 556.71 57.032 556.43m2.412 48.34C51.189 601.76 41.79 603.6 34 600.79'/><rect class='c' width='137.95' height='30.389999' x='202.75999' y='348.94'/><path class='c' d='m317.92 379.33v62.03M230.7 409.72v31.64M102.35 409.72v32.76m160.48-63.15v30.39H115.19v-60.78h87.57v30.39z'/><rect class='c' width='82.174034' height='60.779968' x='33.015968' y='348.94'/><text class='p'><tspan x='38.867' y='372.15' style='stroke-width:3.77953'><tspan style=';text-anchor:start;stroke-width:3.77953'>wheel-globes evicerated</tspan><tspan y='372.15' style='stroke-width:3.77953'></tspan></tspan><tspan x='38.867' y='402.15' style='stroke-width:3.77953'><tspan style=';text-anchor:start;stroke-width:3.77953'>UFO    -attendants</tspan></tspan></text><text y='471' x='345' style='font-size:30px;text-anchor:end'><tspan class='f'>log</tspan><tspan style='font-size:65%;baseline-shift:sub;fill:var(--color1)'>2</tspan><tspan>2151</tspan><tspan style='font-weight:600;font-size:65%;baseline-shift:super'>2</tspan><tspan class='f'>×</tspan><tspan>1938</tspan><tspan style='font-weight:600;font-size:65%;baseline-shift:super'>2</tspan><tspan class='f'>×</tspan><tspan>624</tspan></text><text style='font-size:14px;line-height:0.8;text-anchor:end;white-space:pre;fill-opacity:0.7' x='90.287' y='489.45'><tspan x='92' y='490'><tspan style=';text-anchor:start'>sub-nouns</tspan><tspan style='font-weight:600;font-size:9.08976;baseline-shift:super;text-anchor:start'>count        </tspan><tspan style=';text-anchor:start'>nouns</tspan><tspan style='font-weight:600;font-size:9.08976;baseline-shift:super;text-anchor:start'>count         </tspan><tspan style=';text-anchor:start'>verbs</tspan></tspan></text><text style='font-size:24px;line-height:1;white-space:pre' x='36.541' y='516'><tspan class='f'>≈ </tspan><tspan>53</tspan><tspan style='font-size:70%;fill-opacity:0.7'> bits of entropy</tspan></text><text style='font-size:19px;fill:var(--color1)' x='190.39' y='580.2'><tspan x='190.39' y='580.2' style=';text-anchor:middle'>20 more bits = 2<tspan style='font-weight:600;font-size:65%;baseline-shift:super;text-anchor:middle;fill:var(--color1)'>20</tspan></tspan><tspan x='190.39' y='603.53' style='text-anchor:middle'>≈ <tspan style='fill:var(--colorFg)'>1 million times stronger!</tspan></tspan></text><path class='r' d='M708 616H376V340H872V616H726.35'/><path class='c' d='m419.06 472.62c0-46.75 33.09-71.41 74.8-71.41 41.71 0 74.79 24.66 74.79 71.41'/><path class='c' d='m517.8 476.69c1.37-9.78 12.28-22.3 12.28-22.3 0 0 5.96 11.88 6.98 22.3zm13.32-42.09c-1.06 9.96-0.57 11.22-1.04 19.79M516.11 420.5c0 0 0.78 13.52 2.11 15.19 1.74 2.19 13.79 3.45 12.46 5.68-1.79 3.01-16.74 4.38-17.76 2.06-1.54-3.47-6.35-15.08-6.35-15.08m25.59 48.34 0.81 10.95m-9.74-10.95-2.52 10.92m2.82-67.52c-4.82 10.91 7.01 17.85 15.61 12.25 7.41-4.83 3.09-16.56-2.29-17.67-5.09-1.05-11.21 0.66-13.32 5.42z'/><path class='c' d='m487.94 447.11a31.976 31.861 0 0 1-31.98 31.86 31.976 31.861 0 0 1-31.97-31.86 31.976 31.861 0 0 1 31.97-31.86 31.976 31.861 0 0 1 31.98 31.86zm-58.74 17.44h53.52M429.2 429.67h53.52m-58.73 17.44c21.04 0.48 42.63 0 63.95 0m-30.51-31.86c17.72 6.9 20 23.5 20 31.86 0 8.35-2.28 24.95-20 31.86m-0.98-63.72c6.33 6.9 7.14 23.5 7.14 31.86 0 8.35-0.81 24.95-7.14 31.86m-1.94-63.72c-17.72 6.9-20 23.5-20 31.86 0 8.35 2.28 24.95 20 31.86m0.97-63.72c-6.33 6.9-7.14 23.5-7.14 31.86 0 8.35 0.81 24.95 7.14 31.86'/><ellipse class='c' cx='437.56' cy='475.95' rx='7.6862' ry='7.6587'/><ellipse class='c' cx='437.56' cy='475.95' rx='3.7132' ry='3.6998'/><ellipse class='c' cx='-474.37' cy='475.95' transform='scale(-1,1)' rx='7.6862' ry='7.6587'/><ellipse class='c' cx='-474.37' cy='475.95' transform='scale(-1,1)' rx='3.7132' ry='3.6998'/><path class='c' d='m601.74 503.16c-18.85 6.99-52.53 15.56-107.88 15.56-55.35 0-86.72-6.5-105.57-13.49 0 0 4.31-22.48 30.77-32.61 16.83 8.77 56.61 9.35 74.8 9.35 18.18 0 57.97-0.58 74.79-9.35 22.64 6.39 33.09 30.54 33.09 30.54zm-54.85 12.8c3.49 19.13 32.77 13.26 29.15-4.73m-95.94 8.14c1.09 15.76 26.26 19.24 27.88-0.1m-95.94-7.55c-4.32 17.76 23.6 21.16 27.53 5.16'/><path class='c' d='m527.12 411.44c2.04 2.63 10.14 2.74 14.16 1.61m0.14 5.42c0 0 0.46-6.14-0.88-8.23-1.33-2.09-9.39-2.7-11.67-1.17-2.28 1.52-2.92 7.2-2.92 7.2 3.05 2.07 10.26 2.64 15.47 2.2zm0-0.26c7.49 1.43 1.09 15.9 6 19.56-5.99 0-9.57-1.78-10.07-4.42-0.49-2.65-0.36-10.4-4.35-14.9'/><path class='c' d='m487.41 443.94c0 0 11.05 7.06 14.05 7.08 3 0 12.19-7.53 12.19-7.53'/><path class='c' d='m518.62 442.87c2.74 1.99 6.92 4.27 9.79 4.75 0.26 2.27 1.76 3.63 3.5 4.94-3.82 1.76-11.65-2.07-15.02-6.74m-2.58 1.57c-0.1 0.44 0.83 1.09 1.12 0.86 0.46-0.38 4.3-6.82 4.25-7.45 0-0.34-0.97-1.02-1.5-0.56-0.47 0.42-3.72 6.31-3.87 7.15zm2.8-5.59c-0.27-0.19-0.8-0.39-1.64-0.89-1.35-0.81-2.34-2.36-3.6-2.76-0.31-0.1-1.72 2.33-1.74 2.88 0 0.45 3.42 3.08 5.24 3.86'/><path class='c' d='m555.07 446.6c0.61-0.1 9.2-0.92 9.2-0.69 0 0.36-2.48 0.6-2.93 0.77m-13.74 6.17c1.32 0.31 2.47 1 3.57 1.77 0.58 0.41 1.13 0.84 1.71 1.25 0.69 0.49 1.47 0.84 2.19 1.3 5.79 3.69-2.31-0.1-3.9-1.14 0 0 0 1.03 1.22 2.49m-18.77-7.13c3.81-1.79 7.74-3.61 11.73-4.98 0.65-0.23 1.59-0.28 2.17-0.65 0.11-0.1-0.24 0-0.35 0.1-0.54 0.29-1.04 0.67-1.58 0.96-1.44 0.79-2.91 1.52-4.36 2.28-0.56 0.3-0.97 0.6-1.49 0.95-0.1 0.1-0.35 0.22-0.25 0.19 1.7-0.51 3.36-1.11 5.12-1.45 1.4-0.28 2.85-0.4 4.26-0.53 3.03-0.27 5.14 0.1 0.67 1.1-1.62 0.38-12.01 1.2-12.89 2.2m-11.46 0.1c0.9 0 1.79 0.1 2.68 0.16 0.23 0 1.36 0.17 1.74 0.23 6.2 0.99-2.19 0.39-2.19 0.73 0 0.57 1.13 0 1.7 0 0.68 0 2.46 0.4 2.46-0.63 0-1.51-1.32-3.93-2.95-2.65' style='stroke:red'/><path style='fill:var(--colorBg);stroke:var(--colorFg);stroke-width:4;stroke-linecap:round' d='m600.02 464.38c-10.66 23.89 15.5 39.09 34.52 26.82 16.38-10.58 6.82-36.28-5.08-38.7-11.24-2.29-24.79 1.45-29.44 11.88z'/><path style='fill:none;stroke:var(--colorFg);stroke-width:4;stroke-linecap:round;stroke-linejoin:round' d='m596.19 551.83c0.98-5.29 14-43.47 19.27-44.43 4.54-0.83 14.98 28.44 21.6 25.49 5.25-2.34-7.89-32.13-6.76-38.25 1.17 2.97 6.48 1.08 5.83-2.35m-42.34 122.64c9.56-21.5 13.61-46.31 21.14-65.87 5.59 22.86 17.06 43.49 21.45 65.87M616.8 496.14c-2.34 21.81-0.82 34.15-1.87 52.92'/><ellipse class='c' cx='616.17' cy='421.93' rx='10.935' ry='11.137'/><ellipse class='c' cx='634.47' cy='441.39' rx='6.9246' ry='7.0592'/><ellipse class='c' cx='579.92' cy='418.28' rx='14.99' ry='15.262'/><text class='i' x='385.85373' y='362.29785' xml:space='default'>Visualize the sentence to make <tspan x='385.85373' dy='1.25em'>it even easier to remember!</tspan></text><path style='fill:#6d00ff' class='r s' d='M726.35 616V560.8H708V616'/><rect class='r s' style='fill:#383838' width='18.354' height='55.200001' x='708' y='339.99994'/><rect class='r s' style='fill:#ff0000' width='18.354' height='55.200001' x='708' y='395.19995'/><rect class='r s' style='fill:#fef300' width='18.354' height='55.200001' x='708' y='450.39996'/><rect class='r s' style='fill:#00ff90' width='18.354' height='55.200001' x='708' y='505.59998'/><text style='font-size:19px;text-anchor:end;font-weight:700;fill:var(--color1)' x='704.49' y='357.75'><tspan x='704.49' y='357.75'>0</tspan><tspan x='704.49' dy='2.8em'>25</tspan><tspan x='704.49' dy='2.8em'>50</tspan><tspan x='704.49' dy='2.8em'>75</tspan><tspan x='704.49' dy='2.8em'>100</tspan></text><text style='font-weight:700;font-size:13px;text-anchor:end;fill:var(--color1)' x='703.99' y='595.87'>bits of<tspan x='703.99' dy='1em'>entropy</tspan></text><text style='font-size:14px' x='731' y='377'><tspan x='731'>Nope!</tspan><tspan x='731' dy='3.7em'>Bad passwords</tspan><tspan x='731' dy='3.3em'>Unimportant </tspan><tspan x='731' dy='1.25em'>accounts</tspan><tspan x='731' dy='2.6em'>Email &amp; sensitive </tspan><tspan x='731' dy='1.25em'>accounts</tspan><tspan x='731' dy='2.1em'>Master passwords,</tspan><tspan x='731' dy='1.25em'>crypto wallets &amp;</tspan><tspan x='731' dy='1.25em'>important accounts</tspan></text><path style='fill:var(--colorBg);stroke:var(--colorFg);stroke-width:4;stroke-linecap:round' d='m369.55 71.098c-24.38 28.03 5.07 59.332 36.07 50.472 26.71-7.64 24.24-46.391 9-54.543-14.4-7.701-34.43-8.158-45.07 4.071z'/><path style='fill:none;stroke:var(--colorFg);stroke-width:4;stroke-linecap:round' d='m313.35 152.25c8.72-1.42 26.79 8.34 36.02 10.89 7.01 1.94 32.71-17.08 38.13-21.2 8.54 18.58 13.07 39.78 19.85 58.91M339.72 292c13.63-30.45 29.96-65.58 40.71-93.28 7.97 32.37 13.74 61.59 20.02 93.28m-9.64-168.27c-5.95 30.07-5.92 46.93-10.38 74.99'/><text style='font-size:16px;line-height:1.25;white-space:pre;shape-inside:url(#rect4491)'/></svg>
+      <h2>FAQs</h2>
+
+      <h4>Is the source available?</h4>
+      <p>Of course! The source is at <a href='https://github.com/gizapp/gizapp.github.io/tree/main/dev/up'>github.com/gizapp/gizapp.github.io/tree/main/dev/up</a></p>
+      <p>Running the source is <i>trivial</i>, you literally just need to clone the repository and open <loc>dev/up/index.html</loc> on a browser</p>
+
+      <h4>Does this have a mobile app?</h4>
+      <p>No, it doesn't. But you can add this page to your home page using your mobile browser. I'm sure you'll like the way it looks there</p>
+
+      <h4>Is Air-gapped Operation supported?<span style='font-weight:300'> / </span>Can I run the generator locally?</h4>
+      <p>Yes! The build of this website is single-file, which means you just need to save this site (HTML only) for it to work locally and without an internet connection</p>
+
+      <h4>"Sending passwords over the internet like this is a bad idea!"</h4>
+      <p>No, I'm not. Passwords are generated within your browser and never get sent through the internet. They will also be cleared when you close or refresh this page</p>
+
+      <h4>Can I use Understandable Passwords for my crypto wallet<span style='font-weight:300'> / </span>other important accounts?</h4>
+      For extra strong passwords, you can use the <cmd>generate strength</cmd> command with a bit count of 100 or higher, so something like <cmd>generate strength 100</cmd> would give you a good password for your critical applications
+
+      <h4>Is your random number generator secure?</h4>
+      <p>Yes, I use the <a href='https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues'>Crypto.getRandomValues</a> function and rejection sampling in my generator. So if your trust your browser, there should be no biases in those random numbers</p>
+
+      <h4>Why does the website reset to light<span style='font-weight:300'> / </span>dark theme when I reload?</h4>
+      <p>The website follows the dark mode of your browser. To keep it in light or dark mode, change your browser's settings</p>
+
+      <h4>Does this have an API?<span style='font-weight:300'> / </span>How can I integrate this to my own project?</h4>
+      <p>The website doesn't have an API, but you can still integrate its functions to your code using the source. Clone the <a href='https://github.com/gizapp/gizapp.github.io/tree/main/dev/up'>repository</a> and look into <loc>dev/up/wordlist/</loc>. It should contain everything you need:</p>
+      <ul>
+        <li>For javascript, you only need 2 files: <loc>dev/up/wordlist/wordlist.js</loc> and <loc>dev/up/wordlist/generator.js</loc></li>
+        <li>For the raw wordlist, look into <loc>dev/up/wordlist/wordlist.md</loc></li>
+        <li>There's a Python version of the generator script: <loc>dev/up/wordlist/generator.py</loc> that uses the raw wordlist. However, this script is no longer maintained</li>
+
+      </ul>
+      <h2>Contacts</h2>
+      <a class='prepend-icon-email contact' href='mailto:gizapp@tutanota.com'> gizapp@tutanota.com</a>
+      <a class='prepend-icon-github contact' href='https://github.com/gizapp'> github.com/gizapp</a>
     </div>
   </body>
 </html>

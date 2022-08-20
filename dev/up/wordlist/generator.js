@@ -1,4 +1,12 @@
 'use strict';
+
+// Table of Functions
+//
+// Generate with parameter - generator.phrase.rand
+// Generate with specified strength - generator.minEntropy
+// Encode - generator.encode
+// Deccode - generator.decode
+
 const generator = {nounGroup:{}, phrase:{}}
 for (const key in wordlist)
   wordlist[key] = wordlist[key].split(';')
@@ -79,37 +87,6 @@ generator.nounGroup.choices.push(generator.nounGroup.choices.at(-1) * wordlist.a
 generator.nounGroup.choices.push(generator.nounGroup.choices.at(-1) * generator.quantityCount)
 generator.nounGroup.choices = generator.nounGroup.choices.map(num => BigInt(num))
 
-generator.nounGroup.randChain = function({bitCount, groupSize}={}) {
-  assert(bitCount > 0)
-  let groupCount = 0
-  let targetChoices = 2n ** BigInt(bitCount)
-  let currentChoices = 1n
-  console.log(groupSize)
-  let groupChoices = generator.nounGroup.choices[groupSize]
-  while (currentChoices < targetChoices) {
-    groupCount += 1
-    currentChoices *= groupChoices
-  }
-  console.log(groupCount, groupSize)
-  groupSize = 0
-  currentChoices = 1n
-  while (currentChoices < targetChoices) {
-    groupSize += 1
-    currentChoices = generator.nounGroup.choices[groupSize] ** BigInt(groupCount)
-  }
-  console.log(groupCount, groupSize)
-  currentChoices /= generator.nounGroup.choices[groupSize]
-  targetChoices /= currentChoices
-  let firstGroupSize = 1
-  for (;generator.nounGroup.choices[firstGroupSize] <= targetChoices; firstGroupSize++);
-  console.log(groupCount, groupSize, firstGroupSize)
-
-  let result = generator.nounGroup.rand(firstGroupSize)
-  for (let i = 1; i < groupCount; i++)
-    result += ', ' + generator.nounGroup.rand(groupSize)
-  return [result, currentChoices * generator.nounGroup.choices[firstGroupSize]]
-}
-
 generator.phrase.rand = function(groupCount, groupSize, firstGroupSize, encodingObj) {
   assert(groupCount > 0 && groupCount < 512)
   if (firstGroupSize == null) firstGroupSize = groupSize
@@ -138,7 +115,7 @@ generator.minEntropy = function({bitCount, encodingObj}={}) {
   let targetChoices = 2n ** BigInt(bitCount)
   let currentChoices = 0
   while (true) {
-    currentChoices = generator.phrase.choices(groupCount, 5)
+    currentChoices = generator.phrase.choices(groupCount, 4)
     if (currentChoices >= targetChoices) break
     groupCount += 1
   }

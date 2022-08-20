@@ -4,11 +4,13 @@ html {
   --red: #B00;
   --redSel: #25F;
   --blue: #00B;
-  --blueSel: #E46;
+  --blueSel: #e45;
   --cyan: #0AA;
   --cyanSel: #E57;
   --lightBlue: #07F;
   --lightBlueSel: #0CC;
+  --violet: #50F;
+  --violetSel: #2aF;
   --black: #000;
   --blackSel: #000;
   --dark-cyan: #0FF;
@@ -19,7 +21,7 @@ html {
   --dark-lightBlueSel: #0EC;
   --dark-lightBlueBg: #1a1a4d;
   --darker-lightBlueBg: #121236;
-  --dark-blue: #55F;
+  --dark-blue: #66F;
   --dark-blueSel: #0FF;
   --dark-blueBg: #1a1a4d;
   --darker-blueBg: #121236;
@@ -31,6 +33,10 @@ html {
   --dark-pinkSel: #2AF;
   --dark-pinkBg: #4d1a33;
   --darker-pinkBg: #361224;
+  --dark-violet: #a7F;
+  --dark-violetSel: #09F;
+  --dark-violetBg: #440066;
+  --darker-violetBg: #300047;
   --dark-white: #FFF;
   --dark-whiteSel: #FFF;
   --dark-whiteBg: #333333;

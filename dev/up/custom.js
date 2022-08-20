@@ -6,7 +6,7 @@ dynamicManifest = {
   name:'Understandable Passwords',
   description:'The tool to generate strong and easily memorizable passwords',
   short_name:'UPass',
-  categories:['productivity', 'security'],
+  categories:['password', 'productivity', 'security'],
   display:'fullscreen',
   orientation:'any',
   start_url:'https://gizapp.github.io/up/',

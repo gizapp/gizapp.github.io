@@ -4,6 +4,7 @@ var fs = require("fs");
 const appName = process.argv[2]
 require(`../${appName}/custom.js`) // custom.js is expected to define the global variables dynamicManifest and minifierProps
 customProps = {...dynamicManifest, ...minifierProps}
+customProps.keywords = customProps.categories.join(', ')
 
 const minifyOptions = {
   collapseWhitespace:true,
@@ -50,6 +51,10 @@ fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
   updateMeta('twitter:title', 'name')
   updateMeta('twitter:description', 'description')
   updateMeta('twitter:image', 'previewImg')
+
+  updateMeta('description', 'description')
+  updateMeta('keywords', 'keywords')
+  data = data.replaceAll('<title></title>', `<title>${customProps.name}</title>`)
 
   data = data.replaceAll('</script><script>', '\n').replaceAll('</style><style>', '\n')
   data = minify(data, minifyOptions);

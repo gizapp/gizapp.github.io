@@ -1,11 +1,11 @@
 @use "sass:map"
 @use "sass:color"
-$colors:('pink':#F47, 'red':#B00, 'blue':#00B, 'cyan':#0AA, 'lightBlue':#07F, 'black':#000)
-$sels:('pink':#2AF, 'red':#25F, 'blue':#E46, 'cyan':#E57, 'lightBlue':#0CC, 'black':#000)
+$colors:('pink':#F47, 'red':#B00, 'blue':#00B, 'cyan':#0AA, 'lightBlue':#07F, 'violet':#50F, 'black':#000)
+$sels:('pink':#2AF, 'red':#25F, 'blue':#e45, 'cyan':#E57, 'lightBlue':#0CC, 'violet':#2aF, 'black':#000)
 
-$dark-colors:('cyan':#0FF, 'lightBlue':#4BF, 'blue':#55F, 'red':#F44, 'pink':#F47, 'white':#FFF)
-$dark-bgs:('cyan':#123, 'lightBlue':#113, 'blue':#113, 'red':#311, 'pink':#312, 'white':#000)
-$dark-sels:('cyan':#35F, 'lightBlue':#0EC, 'blue':#0FF, 'red':#F80, 'pink':#2AF, 'white':#FFF)
+$dark-colors:('cyan':#0FF, 'lightBlue':#4BF, 'blue':#66F, 'red':#F44, 'pink':#F47, 'violet':#a7F, 'white':#FFF)
+$dark-bgs:('cyan':#123, 'lightBlue':#113, 'blue':#113, 'red':#311, 'pink':#312, 'violet':#203, 'white':#000)
+$dark-sels:('cyan':#35F, 'lightBlue':#0EC, 'blue':#0FF, 'red':#F80, 'pink':#2AF, 'violet':#09F, 'white':#FFF)
 html
   @each $name, $color in $colors
     --#{$name}: #{$color}
