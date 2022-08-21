@@ -1,14 +1,5 @@
-const cacheName = 'up';
-const cachedFiles = [
-  './index.html',
-];
+const cacheName = 'gizapp';
 
-self.addEventListener('install', event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(cacheName)
-    await cache.addAll(cachedFiles)
-  })())
-});
 self.addEventListener('fetch', (e) => {
   e.respondWith((async () => {
     const r = await caches.match(e.request);
