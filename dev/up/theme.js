@@ -1,4 +1,44 @@
+/*
+Understandable Passwords - make random, yet understandable sentences to use as passwords
+Copyright 2022 Đặng Văn Quân
+
+This file is part of Understandable Passwords.
+
+Understandable Passwords is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+
+Understandable Passwords is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with Understandable Passwords. If not, see <https://www.gnu.org/licenses/>.
+
+Contact email: gizapp@tutanota.com
+*/
 'use strict';
+
+//favicon
+const myEncodeURI = text => encodeURIComponent(text)
+  .replaceAll('%20', ' ').replaceAll('%2F', '/')
+  .replaceAll('%3A', ':').replaceAll('%3D', '=')
+  .replaceAll('%3C', '<').replaceAll('%3E', '>')
+let favicon = document.querySelector("link[rel~='icon']");
+let previewElem = document.querySelector("meta[property~='og:image']");
+let themeColor = document.querySelector("meta[name~='theme-color']");
+let processIcon = (template, color, darkMode) => 'data:image/svg+xml,' + myEncodeURI(template
+    .replaceAll('{color1}', rootStyle.getPropertyValue(`--theme-${color}`))
+    .replaceAll('{colorFg}', darkMode ? '#FFF' : '#000')
+    .replaceAll('{colorBg}', darkMode ? rootStyle.getPropertyValue(`--darker-${color}Bg`) : 'white'))
+const updateFavicon = e => {
+  themeColor.content = rootStyle.getPropertyValue('--color1')
+  favicon.href = processIcon(faviconTemplate, e.color, e.darkMode)
+}
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme:dark)').addEventListener('change', e=>updateFavicon(ThemeChangeEvent()))
+  let darkMode = window.matchMedia('(prefers-color-scheme:dark)').matches
+  if (localStorage.themeBg && darkMode !== (localStorage.themeBg !== 'white'))
+    localStorage.themeBg = darkMode ? 'darker' : 'white'
+}
+document.addEventListener('themechange', updateFavicon)
+
+//theme
 const ThemeChangeEvent = () => {
   const event = new Event('themechange')
   event.darkMode = window.matchMedia ? window.matchMedia('(prefers-color-scheme:dark)').matches : false

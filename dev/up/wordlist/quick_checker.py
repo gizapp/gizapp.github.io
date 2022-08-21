@@ -1,3 +1,18 @@
+license = '''/*
+Understandable Passwords - make random, yet understandable sentences to use as passwords
+Copyright 2022 Đặng Văn Quân
+
+This file is part of Understandable Passwords.
+
+Understandable Passwords is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+
+Understandable Passwords is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with Understandable Passwords. If not, see <https://www.gnu.org/licenses/>.
+
+Contact email: gizapp@tutanota.com
+*/'''
+
 from common import *
 from wiktionaryparser import WiktionaryParser
 import sys
@@ -39,6 +54,7 @@ print('errors', errors)
 wordlist['plural noun'] = []
 print_stat(wordlist)
 with open('wordlist.md', 'wt') as wordlist_file:
+  print(license, file=wordlist_file)
   for category in wordlist:
     print('#', category, file=wordlist_file)
     wordlist[category] = list(wordlist[category])
@@ -60,5 +76,5 @@ for i in range(len(wordlist['noun'])):
 for key in wordlist:
   wordlist[key] = ';'.join(wordlist[key])
 with open('wordlist.js', 'wt') as wordlist_file:
-  print('const wordlist=', end='', file=wordlist_file,flush=True)
+  print(license + '\nconst wordlist=', end='', file=wordlist_file,flush=True)
   json.dump(wordlist, wordlist_file)

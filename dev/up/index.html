@@ -1,3 +1,17 @@
+<!--
+Understandable Passwords - make random, yet understandable sentences to use as passwords
+Copyright 2022 Đặng Văn Quân
+
+This file is part of Understandable Passwords.
+
+Understandable Passwords is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.
+
+Understandable Passwords is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License along with Understandable Passwords. If not, see <https://www.gnu.org/licenses/>.
+
+Contact email: gizapp@tutanota.com
+-->
 <!DOCTYPE html>
 <html lang='en' xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#">
   <head>
@@ -109,220 +123,15 @@
         }
         const byClass = (parent, name) => parent.getElementsByClassName(name)[0]
       </script>
-      <script src='favicon.js'></script>
       <script src='manifest.js'></script>
       <script src='theme.js'></script>
       <script src='tooltip.js'></script>
       <script src='icon.js'></script>
       <script src='tokenize.js'></script>
-      <script src='suggestions.static.js'></script>
-      <script src='suggestions.js'></script>
-      <script>
-        'use strict';
-        const doubleBuffer = document.getElementById('doubleBuffer')
-        const cmdBuffer = byClass(doubleBuffer, 'cmd')
-        const outputs = byClass(doubleBuffer, 'result')
-        doubleBuffer.cachedCmd = {}
-        doubleBuffer.selected = null
-        cmdBuffer.count = 0
-        cmdBuffer.elemClick = function()/*func-required*/{
-          if (window.getSelection().toString() === '')
-            doubleBuffer.setSelected(Number(this.id.substring(1)))
-        }
-        cmdBuffer.add = function(command, hidables) {
-          const elem = document.createElement('div')
-          elem.command = command
-          let pos = 0
-          if (hidables.length > 0) {
-            elem.className = 'hidable'
-            for (const [start, end] of hidables) {
-              elem.appendChild(document.createTextNode(command.substring(pos, start)))
-              let cover = document.createElement('span')
-              cover.id = 'cover'
-              cover.innerText = '"··'
-              elem.appendChild(cover)
-              const hidden = document.createElement('span')
-              hidden.id = 'text'
-              hidden.innerText = command.substring(start, end)
-              elem.appendChild(hidden)
-              cover = document.createElement('span')
-              cover.id = 'cover'
-              cover.innerText = '··"'
-              elem.appendChild(cover)
-              pos = end
-            }
-          }
-          elem.appendChild(document.createTextNode(command.substring(pos)))
-          elem.id = 'c' + this.count++
-          elem.onclick = this.elemClick
-          this.prepend(elem)
-          return elem
-        }
-        outputs.count = 0
-        outputs.add = (type, ...args) => {
-          outputs.prepend(outputs.creators[type](...args))
-        }
-        doubleBuffer.setSelected = function(value) {
-          if (doubleBuffer.cachedCmd[this.selected] != null && doubleBuffer.cachedCmd[this.selected] != input.innerText)
-            doubleBuffer.cachedCmd[this.selected] = input.innerText
-          if (this.selected != null) {
-            cmdBuffer.querySelector('#c' + this.selected)?.classList?.toggle('selected', false)
-            outputs.querySelector('#c' + this.selected)?.classList?.toggle('selected', false)
-          }
-          let newSel = null
-          if (value != null) {
-            if (value < 0) value = 0
-            newSel = cmdBuffer.querySelector('#c' + value)
-            newSel?.classList?.toggle('selected', true)
-            outputs.querySelector('#c' + value)?.classList?.toggle('selected', true)
-            if (!(value in doubleBuffer.cachedCmd))
-              doubleBuffer.cachedCmd[value] = newSel?.command
-            input.changeText(doubleBuffer.cachedCmd[value] || '')
-          }
-          this.selected = value
-        }
-        // func-required: the function uses 'this' and is meant to be assigned to other element's click event, it can't be converted to a lambda expression
-      </script>
-      <script src='outputs.js'></script>
       <script src='wordlist/wordlist.js'></script>
-      <script src='commands.static.js'></script>
-      <script>
-        'use strict';
-        const shell = document.getElementById('shell')
-        const input = byClass(shell, 'input')
-        input.shellPrefix = byClass(shell, 'prefix')
-        input.navUp = byClass(shell, 'insert-icon-up')
-        input.navDown = byClass(shell, 'insert-icon-down')
-        input.toggleHideBtn = byClass(shell, 'insert-icon-eye-open')
-        shell.sendCommand = function() {
-          if (input.innerText.trim().length > 0) {
-            this.oncommand(input.innerText)
-            input.changeText('')
-            for (const member in doubleBuffer.cachedCmd) delete doubleBuffer.cachedCmd[member]
-          } else {
-            input.focus()
-          }
-        }
-        input.resetSelection = function () {
-          // Select the end of input text
-          input.focus()
-          if (input.innerText) {
-            const range = document.createRange();
-            range.selectNodeContents(input);
-            range.setStart(range.startContainer, 1)
-            const sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }
-        }
-        input.resetSelection()
-        function bgClick(e) {
-          if (e.target == this)
-            input.resetSelection()
-        }
-        root.addEventListener('click', bgClick)
-        const enterKey = 13
-        const downKey = 40
-        const upKey = 38
-        input.onkeydown = function(e)/*Intercept Enter, Up, and Down key*/{
-          if ([enterKey, upKey, downKey].includes(e.keyCode))
-            e.preventDefault()
-        }
-        input.changeText = function(text) {
-          text = text.replaceAll('\u2011', '-').replaceAll(nonbreakSpace, ' ')
-          this.innerText = text
-          this.onchange(text)
-          input.resetSelection()
-        }
-        input.onkeyup = function(e) {
-          if (e.keyCode === enterKey) {
-            this.parentNode.sendCommand()
-            e.preventDefault()
-          }
-          if (e.keyCode === downKey) this.onnavigate(-1)
-          if (e.keyCode === upKey) this.onnavigate(1)
-          this.onchange(this.innerText)
-        }
-        input.onblur = () => input.onchange(input.innerText)
-        setTimeout(() =>
-          input.toggleHideAnim = {true:input.toggleHideBtn.querySelector('#close'), false:input.toggleHideBtn.querySelector('#open')}
-        , 1)
-        input.hideResult = false
-        input.toggleHide = () => {
-          input.hideResult = !input.hideResult
-          doubleBuffer.classList.toggle('hiding', input.hideResult)
-          input.toggleHideAnim[input.hideResult].beginElement()
-        }
-        input.updateArrow = function() {
-          if (doubleBuffer.selected == null) {
-            this.navUp.classList.add('hidden')
-            this.navDown.classList.toggle('hidden', cmdBuffer.count <= 0)
-          } else {
-            this.navUp.classList.remove('hidden')
-            this.navDown.classList.remove('hidden')
-            if (doubleBuffer.selected === 0)
-              this.navDown.classList.add('hidden')
-            if (doubleBuffer.selected >= cmdBuffer.count)
-              this.navUp.classList.add('hidden')
-          }
-        }
-        input.onnavigate = function(delta) {
-          let selected = doubleBuffer.selected
-          if (selected == null) {
-            if (delta < 0 && cmdBuffer.count > 0) {
-              selected = cmdBuffer.count + delta
-              cmdBuffer.draftCommand = input.innerText
-            }
-          } else if (selected + delta >= -1)
-            selected += delta
-          if (selected >= cmdBuffer.count) {
-            doubleBuffer.setSelected(null)
-            input.changeText(cmdBuffer.draftCommand || '')
-          } else if (selected !== null)
-            doubleBuffer.setSelected(selected)
-          input.updateArrow()
-        }
-        input.onchange = function(text) {
-          if (text == input.oldCmd) return
-          input.oldCmd = text
-          input.updateArrow()
-          processCmd(text, input.commands, input)
-          const empty = !text.trim()
-          shell.classList.toggle('empty', empty)
-          suggestions.classList.toggle('hot', empty)
-          const noError = input.errorArr.length === 0
-          shell.classList.toggle('valid', noError && !empty)
-          let updater = suggestions.childUpdater()
-          for (const item of input.errorArr) updater.next('error', item)
-          for (const item of input.paramArr) updater.next(...item)
-          updater.stop()
-        }
-        shell.oncommand = function(cmd) {
-          cmd = cmd.trimEnd().trimStart()
-          cmdBuffer.add(cmd, input.hidables)
-          input.onchange(cmd)
-          if (input.errorArr.length > 0) {
-            outputs.add('error', input.errorArr.map(item => item.text).join(', '))
-          } else {
-            try {
-              const output = input.cmdObj.base(input.paramValues)
-              outputs.add(...output)
-            } catch (error) {
-              console.error(error)
-              outputs.add('unknown error, see console')
-            }
-          }
-        }
-        function addCommand() {
-          input.changeText(this.innerText + ' ')
-          window.scrollTo(0, 0)
-        }
-        window.addEventListener('load', () => {
-          for (const elem of document.getElementsByTagName('cmd'))
-            elem.onclick = addCommand
-        })
-      </script>
       <script src='wordlist/generator.js'></script>
+      <script src='controller.js'></script>
+      <script src='suggestions.js'></script>
       <script src='commands.js'></script>
     </div>
 
@@ -353,7 +162,7 @@
         <text class='o' x='24' y='31'>Let's compare passwords to phone numbers</text>
         <rect class='r' width='328' height='244' x='24' y='48'/>
         <path class='r s' d='M325.26 99.292C305.73 124.15 78.698 119.65 67.287 77.059 54.833 30.579 174.55 44.17 213.98 45.251c52.62 1.443 127.97-4.198 114.92 37.317 14.14 13.904 27.4 17.772 27.4 17.772 0 0-18.43 3.87-31.04-1.048z'/>
-        <text class='d' style='text-anchor:end' y='72' x='325'>How many phone numbers <tspan dy='125%' style=';text-anchor:end' x='325'>can you remember?</tspan></text>
+        <text class='d' style='text-anchor:end' y='72' x='325'>How many phone numbers <tspan dy='1.25em' style=';text-anchor:end' x='325'>can you remember?</tspan></text>
         <text class='p' x='70' y='161'>954-818-2138</text>
         <path class='c' d='m61 167c-0.965 0.51-3.361 6.9-1.108 6.54 20.924-3.33 58.228-0.16 77.128-2.45 29.18-3.53 74.69 5 100-1.94 1.16-0.32 1.32-4.43 1.22-5.54m-83.47 6.51-0.61 7.31'/>
         <text style='font-size:188%;white-space:pre;line-height:1' x='36.541' y='207.26'><tspan><tspan class='f'>log<tspan style='font-size:65%;font-weight:400;baseline-shift:sub;fill:var(--color1)'>2</tspan>10</tspan><tspan style='font-weight:500;font-size:65%;baseline-shift:super'> 10<tspan style='fill-opacity:0.7'> digits</tspan></tspan></tspan><tspan x='36.541' dy='1.4em' style='font-size:80%'><tspan style='font-weight:300;fill:var(--color1)'>≈ </tspan>33<tspan style='font-size:70%;fill-opacity:0.7'> bits of entropy</tspan></tspan></text>
@@ -443,8 +252,14 @@
         <li>For javascript, you only need 2 files: <loc>dev/up/wordlist/wordlist.js</loc> and <loc>dev/up/wordlist/generator.js</loc></li>
         <li>For the raw wordlist, look into <loc>dev/up/wordlist/wordlist.md</loc></li>
         <li>There's a Python version of the generator script: <loc>dev/up/wordlist/generator.py</loc> that uses the raw wordlist. However, this script is no longer maintained</li>
-
       </ul>
+
+      <h2>License</h2>
+      <p>Understandable Passwords Copyright 2022 Đặng Văn Quân</p>
+      <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or any later version.</p>
+      <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.</p>
+      <p>You should have received a copy of the GNU Affero General Public License along with this program. If not, see <a href='https://www.gnu.org/licenses/'>https://www.gnu.org/licenses/</a>.</p>
+
       <h2>Contacts</h2>
       <a class='prepend-icon-email contact' href='mailto:gizapp@tutanota.com'> gizapp@tutanota.com</a>
       <a class='prepend-icon-github contact' href='https://github.com/gizapp'> github.com/gizapp</a>

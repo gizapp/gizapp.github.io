@@ -2,6 +2,7 @@ var minify = require('html-minifier').minify;
 var fs = require("fs");
 
 const appName = process.argv[2]
+const notice = process.argv[3]
 require(`../${appName}/custom.js`) // custom.js is expected to define the global variables dynamicManifest and minifierProps
 customProps = {...dynamicManifest, ...minifierProps}
 customProps.keywords = customProps.categories.join(', ')
@@ -57,7 +58,7 @@ fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
   data = data.replaceAll('<title></title>', `<title>${customProps.name}</title>`)
 
   data = data.replaceAll('</script><script>', '\n').replaceAll('</style><style>', '\n')
-  data = minify(data, minifyOptions);
+  data = notice + minify(data, minifyOptions);
   if (data.includes('<script src'))
     throw 'unparsed script'
   fs.writeFile(`../../${appName}/index.html`, data, err => {if(err)throw err;});
