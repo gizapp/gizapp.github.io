@@ -31,7 +31,6 @@ Contact email: gizapp@tutanota.com
     <meta name='twitter:title'>
     <meta name='twitter:description'>
     <meta name='twitter:image'>
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap'>
     <link rel='stylesheet' href='color.css'>
     <link rel='stylesheet' href='index.css'>
     <link rel='stylesheet' href='tooltip.css'>
@@ -64,8 +63,18 @@ Contact email: gizapp@tutanota.com
       <script src='custom.js'></script>
       <script>
         'use strict';
-        if (navigator.serviceWorker)
-          navigator.serviceWorker.register('../ServiceWorker.js')
+        function addFonts() {
+          const link = document.createElement("link")
+          link.rel = "stylesheet"
+          link.href = 'https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap'
+          document.head.appendChild(link)
+        }
+        if (navigator.serviceWorker) {
+          navigator.serviceWorker.register('../ServiceWorker.js?cachePaths=up/')
+          navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+            setTimeout(addFonts, 1)
+          })
+        } else addFonts()
 
         function selectElement(elem) {
           const range = document.createRange();
