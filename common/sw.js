@@ -1,5 +1,6 @@
 const cacheName = 'gizapp';
 
+self.addEventListener('install', event => {});
 self.addEventListener('fetch', (e) => {
   e.respondWith((async () => {
     const r = await caches.match(e.request);
