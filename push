@@ -1,5 +1,6 @@
 #!/bin/bash
 ./minify
-git add up/index.html
-git commit -m '[build]'
+git update-index --no-assume-unchanged up/index.html
+git commit -m '[build]' up/index.html
+git update-index --assume-unchanged up/index.html
 git push
