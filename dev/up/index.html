@@ -46,7 +46,7 @@ Contact email: gizapp@tutanota.com
         <span class='prefix' onclick='input.resetSelection()'>
           U<span class='hidden'>nderstandable </span>Pass<span class='hidden'>words</span>&gt;
         </span>
-        <span class='input unstyled' contenteditable spellcheck='false'></span>&nbsp;
+        <span class='input unstyled' contenteditable='true' spellcheck='false'></span>&nbsp;
         <div class='button emptyHidden insert-icon-enter' id='enter' onclick='this.parentNode.sendCommand()'>
           <span class='hidden'>run </span>
         </div>
@@ -70,9 +70,12 @@ Contact email: gizapp@tutanota.com
           document.head.appendChild(link)
         }
         if (navigator.serviceWorker) {
-          navigator.serviceWorker.register('../ServiceWorker.js?cachePaths=up/')
           navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
             setTimeout(addFonts, 1)
+          })
+          navigator.serviceWorker.register('../ServiceWorker.js?cachePaths=up/').catch(e => {
+            addFonts()
+            throw e
           })
         } else addFonts()
 
@@ -196,7 +199,7 @@ Contact email: gizapp@tutanota.com
         <rect class='c' width='137.95' height='30.389999' x='202.75999' y='348.94'/>
         <path class='c' d='m317.92 379.33v62.03M230.7 409.72v31.64M102.35 409.72v32.76m160.48-63.15v30.39H115.19v-60.78h87.57v30.39z'/>
         <rect class='c' width='82.174034' height='60.779968' x='33.015968' y='348.94'/>
-        <text class='p'><tspan x='38.867' y='372.15' style='stroke-width:3.77953'><tspan style=';text-anchor:start;stroke-width:3.77953'>wheel-globes evicerated</tspan><tspan y='372.15' style='stroke-width:3.77953'></tspan></tspan><tspan x='38.867' y='402.15' style='stroke-width:3.77953'><tspan style=';text-anchor:start;stroke-width:3.77953'>UFO    -attendants</tspan></tspan></text>
+        <text class='p'><tspan x='38.867' y='372.15' style='stroke-width:3.77953'><tspan style=';text-anchor:start;stroke-width:3.77953'>wheel-globes evicerated</tspan><tspan y='372.15' style='stroke-width:3.77953'></tspan></tspan><tspan x='38.867' y='402.15' style='stroke-width:3.77953'><tspan style=';text-anchor:start;stroke-width:3.77953'>UFO&nbsp;&nbsp;&nbsp;&nbsp;-attendants</tspan></tspan></text>
         <text y='471' x='345' style='font-size:188%;text-anchor:end'><tspan class='f'>log</tspan><tspan style='font-size:65%;baseline-shift:sub;fill:var(--color1)'>2</tspan><tspan>2151</tspan><tspan style='font-weight:600;font-size:65%;baseline-shift:super'>2</tspan><tspan class='f'>×</tspan><tspan>1938</tspan><tspan style='font-weight:600;font-size:65%;baseline-shift:super'>2</tspan><tspan class='f'>×</tspan><tspan>624</tspan></text>
         <text style='font-size:88%;line-height:0.8;text-anchor:end;white-space:pre;fill-opacity:0.7' x='90.287' y='489.45'><tspan x='92' y='490'><tspan style=';text-anchor:start'>sub-nouns</tspan><tspan style='font-weight:600;font-size:9.08976;baseline-shift:super;text-anchor:start'>count        </tspan><tspan style=';text-anchor:start'>nouns</tspan><tspan style='font-weight:600;font-size:9.08976;baseline-shift:super;text-anchor:start'>count         </tspan><tspan style=';text-anchor:start'>verbs</tspan></tspan></text>
         <text style='font-size:150%;line-height:1;white-space:pre' x='36.541' y='516'><tspan class='f'>≈ </tspan><tspan>53</tspan><tspan style='font-size:70%;fill-opacity:0.7'> bits of entropy</tspan></text>

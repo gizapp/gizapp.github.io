@@ -1,5 +1,7 @@
-var minify = require('html-minifier').minify;
 var fs = require("fs");
+var minimize = require('minimize')
+var UglifyJs = require('uglify-js')
+var CleanCSS = require('clean-css')
 
 const appName = process.argv[2]
 const notice = process.argv[3]
@@ -7,35 +9,27 @@ require(`../${appName}/custom.js`) // custom.js is expected to define the global
 customProps = {...dynamicManifest, ...minifierProps}
 customProps.keywords = customProps.categories.join(', ')
 
-const minifyOptions = {
-  collapseWhitespace:true,
-  collapseBooleanAttributes:true,
-  decodeEntities:true,
-  html5:true,
-  minifyJS:true,
-  minifyCSS:true,
-  minifyURL:true,
-  removeComments:true,
-  removeEmptyAttributes:true,
-  removeOptionalTags:true,
-  removeRedundantAttributes:true,
-  removeStyleLinkTypeAttributes:true,
-  useShortDoctype:true,
-}
+let minifyTopLevel = false
+const css = new CleanCSS({level:2})
+const mmz = new minimize({loose:true, plugins:[
+  { id: 'code',
+    element: function(node, next) {
+      if (node.type === 'script' && node.children.length === 1)
+        node.children[0].data = UglifyJs.minify(node.children[0].data, {mangle:{toplevel:minifyTopLevel}}).code
+      if (node.type === 'style' && node.children.length === 1) {
+        node.children[0].data = css.minify(node.children[0].data).styles
+      }
+    },
+  },
+]})
 fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
   if (err) throw err;
-  data = minify(data, {
-    collapseWhitespace:true,
-    removeScriptTypeAttributes:true,
-    quoteCharacter:'"',
-    minifyJS:true,
-    minifyCSS:true,
-  });
-  for (const match of data.matchAll(/<script src="([\.a-zA-Z\/]+)"><\/script>/g)) {
+  data = mmz.parse(data)
+  for (const match of data.matchAll(/<script src="?([\.a-zA-Z\/]+)"?><\/script>/g)) {
     const script = fs.readFileSync(`../${appName}/` + match[1], 'utf8')
     data = data.replaceAll(match[0], '<script>' + script + '</script>')
   }
-  for (const match of data.matchAll(/<link rel="stylesheet" href="([\.a-zA-Z\/]+)"\>/g)) {
+  for (const match of data.matchAll(/<link rel="?stylesheet"? href="?([\.a-zA-Z\/]+)"?\>/g)) {
     const script = fs.readFileSync(`../${appName}/` + match[1], 'utf8')
     data = data.replaceAll(match[0], '<style>' + script + '</style>')
   }
@@ -55,10 +49,12 @@ fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
 
   updateMeta('description', 'description')
   updateMeta('keywords', 'keywords')
-  data = data.replaceAll('<title></title>', `<title>${customProps.name}</title>`)
+  data = data.replaceAll(/<title> ?<\/title>/g, `<title>${customProps.name}</title>`)
 
-  data = data.replaceAll('</script><script>', '\n').replaceAll('</style><style>', '\n')
-  data = notice + minify(data, minifyOptions);
+  //data = data.replaceAll(/<\/script> ?<script>/g, '\n').replaceAll(/<\/style> ?<style>/g, '\n')
+  data = data.replaceAll(/<\/script> ?<script>/g, '\n')
+  minifyTopLevel = true
+  data = notice + mmz.parse(data);
   if (data.includes('<script src'))
     throw 'unparsed script'
   fs.writeFile(`../../${appName}/index.html`, data, err => {if(err)throw err;});
