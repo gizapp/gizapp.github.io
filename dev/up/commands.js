@@ -15,7 +15,7 @@ Contact email: gizapp@tutanota.com
 'use strict';
 const formatGeneratorResult = base => props => {
   const output = base(props)
-  return ['hidable', output[0], `${Math.round(log2(output[1], 16)*100)/100} bits`, `that's out of ${output[1].toLocaleString()} posible passwords`]
+  return ['hidable', output[0], `${Math.round(log2(output[1], 16)*100)/100} bits`, `that's out of ${output[1].toLocaleString()} possible passwords`]
 }
 const formatStatusResult = (base, type='plain') => props => {
   const output = base(props)

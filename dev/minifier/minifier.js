@@ -9,13 +9,13 @@ require(`../${appName}/custom.js`) // custom.js is expected to define the global
 customProps = {...dynamicManifest, ...minifierProps}
 customProps.keywords = customProps.categories.join(', ')
 
-let minifyTopLevel = false
+let finalStep = false
 const css = new CleanCSS({level:2})
 const mmz = new minimize({loose:true, plugins:[
   { id: 'code',
     element: function(node, next) {
       if (node.type === 'script' && node.children.length === 1)
-        node.children[0].data = UglifyJs.minify(node.children[0].data, {mangle:{toplevel:minifyTopLevel}}).code
+        node.children[0].data = UglifyJs.minify(node.children[0].data, {mangle:{toplevel:finalStep}}).code
       if (node.type === 'style' && node.children.length === 1) {
         node.children[0].data = css.minify(node.children[0].data).styles
       }
@@ -53,8 +53,8 @@ fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
 
   //data = data.replaceAll(/<\/script> ?<script>/g, '\n').replaceAll(/<\/style> ?<style>/g, '\n')
   data = data.replaceAll(/<\/script> ?<script>/g, '\n')
-  minifyTopLevel = true
-  data = notice + mmz.parse(data);
+  finalStep = true
+  data = notice + mmz.parse(data).replaceAll('&nbsp;', '\u00A0').replaceAll('&emsp;', '\u2003').replaceAll('&ensp;', '\u2002').replaceAll('&emsp14;', '\u2005');
   if (data.includes('<script src'))
     throw 'unparsed script'
   fs.writeFile(`../../${appName}/index.html`, data, err => {if(err)throw err;});
