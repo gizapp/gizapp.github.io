@@ -35,7 +35,7 @@ html {
   fill:var(--colorBg);
   stroke-width:6;
 }
-body{
+body {
   margin:0;
 }
 @keyframes fadeIn {
@@ -239,7 +239,7 @@ h4 {
 }
 #suggestions > span {
   animation: var(--medAnimTime) linear 0s 1 growIn;
-  transition:all var(--medAnimTime) ease;
+  transition:all var(--medAnimTime) linear;
   color:var(--localColor);
   background-color:var(--localBg);
   border-radius:0.3em;
