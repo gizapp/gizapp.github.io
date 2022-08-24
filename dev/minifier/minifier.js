@@ -16,7 +16,7 @@ const mmz = new minimize({loose:true, plugins:[
   { id: 'code',
     element: function(node, next) {
       if (node.type === 'script' && node.children.length === 1)
-        node.children[0].data = UglifyJs.minify(node.children[0].data, {mangle:{toplevel:finalStep}}).code
+        node.children[0].data = UglifyJs.minify(node.children[0].data.replace("'use strict';", '').replace('"use strict";', ''), {mangle:{toplevel:finalStep}}).code
       if (node.type === 'style' && node.children.length === 1) {
         node.children[0].data = css.minify(node.children[0].data).styles
       }
