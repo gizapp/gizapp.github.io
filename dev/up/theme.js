@@ -85,23 +85,24 @@ let rootStyle = getComputedStyle(document.documentElement)
 const rem2px = parseFloat(rootStyle.fontSize)
 const medAnimTime = parseFloat(rootStyle.getPropertyValue('--medAnimTime'))*1000
 theme.setProperty('--animTime', 0) // avoid-initial-transition
-theme.setProperty('--medAnimTime', 0) // avoid-initial-transition
-theme.setProperty('--longAnimTime', 0) // avoid-initial-transition
+theme.setProperty('--medAnimTime', 0)
+theme.setProperty('--longAnimTime', 0)
 if (setTheme()[0]) {
   delete localStorage.themeBg
   delete localStorage.themeColor
   setTheme()
 }
-const color1 = theme.getPropertyValue('--color1')
-const colorFg = theme.getPropertyValue('--colorFg')
-const colorBg = theme.getPropertyValue('--colorBg')
-theme.setProperty('--color1', colorBg)
-theme.setProperty('--colorFg', colorBg)
 setTimeout(() => { // avoid-initial-transition
   theme.setProperty('--animTime', null)
   theme.setProperty('--medAnimTime', null)
   theme.setProperty('--longAnimTime', null)
 }, 1)
+
+const color1 = theme.getPropertyValue('--color1')
+const colorFg = theme.getPropertyValue('--colorFg')
+const colorBg = theme.getPropertyValue('--colorBg')
+theme.setProperty('--color1', colorBg) // hide-page
+theme.setProperty('--colorFg', colorBg)
 const showPage = () => {
   if (color1 != null) {
     theme.setProperty('--color1', color1)
@@ -111,7 +112,9 @@ const showPage = () => {
     colorBg = null
   }
 }
-setTimeout(showPage, 1000)
+setTimeout(showPage, 500) // show-page
 document.fonts.ready.then(showPage)
 
-// avoid-initial-transition: briefly set root transition to none to avoid the theme change transition when reloading the page
+// avoid-initial-transition: briefly set transition durations to 0 to avoid transitions when loading the page
+// hide-page: start with an empty page to wait for the fonts to ready
+// show-page: when loading for the first time, the font will take some time to load, so we ensure that the page doesn't wait too long for the font. If the font is cached, it would be ready quickly and we can show the page right away
