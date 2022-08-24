@@ -23,6 +23,7 @@ html {
   --longAnimTime:3s;
   --longTransition:cubic-bezier(0.9, 0, 0.1, 1);
   --iconHeight:1em;
+  --hiddenFontSize:0;
   stroke-linecap:round;
   stroke-linejoin:round;
   font-weight:370;
@@ -152,21 +153,23 @@ h4 {
   font-size:0;
   pointer-events:none;
 }
+@keyframes pop {
+  0% {font-size:1em;background-color:var(--color1)}
+  50% {font-size:1.5em;background-color:var(--selColor);font-weight:1000;stroke-width:15}
+  100% {font-size:1em;background-color:var(--color1)}
+}
 #shell.valid > #enter {
+  --hiddenFontSize:1em;
+  animation: var(--medAnimTime) linear calc(var(--medAnimTime)*2) 1 pop;
   background-color:var(--color1);
   margin-right:0.5em;
   padding-left:0.2em;
   stroke:var(--colorBg);
   fill:var(--colorFg);
+  color:var(--colorBg);
 }
 #shell > .button > .hidden {
-  transition:all var(--animTime) ease;
-  font-size:0;
-}
-#shell.valid > .button > .hidden {
-  font-size:1em;
-  background-color:var(--color1);
-  color:var(--colorBg);
+  font-size:var(--hiddenFontSize);
 }
 #shell > .prefix {
   transition-property:all;
@@ -208,7 +211,7 @@ h4 {
   --localColor:var(--color1);
   --localBg:var(--color1Bg);
   font-size:1.1em;
-  transition:all var(--animTime) ease;
+  transition:all var(--animTime) linear;
   padding:0.3em 0;
   overflow-x:auto;
   overflow-y:hidden;
@@ -224,12 +227,15 @@ h4 {
   margin:0;
   padding:0;
 }
-#suggestions.hot {
+.msg {
+  font-variation-settings: 'CASL' 1, 'slnt' -15;
+}
+#suggestions.hot > span {
   --localColor:var(--colorFg);
   font-weight:600;
 }
 #suggestions > span {
-  animation: var(--medAnimTime) ease-out 0s 1 growIn;
+  animation: var(--medAnimTime) linear 0s 1 growIn;
   transition:all var(--medAnimTime) ease;
   color:var(--localColor);
   background-color:var(--localBg);
@@ -244,7 +250,7 @@ h4 {
   100% {font-size:0;opacity:0}
 }
 #suggestions > span.hidden {
-  animation: var(--medAnimTime) ease-in 0s 1 shrinkOut;
+  animation: var(--medAnimTime) linear 0s 1 shrinkOut;
   user-select:none;
   font-size:0;
   opacity:0;

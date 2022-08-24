@@ -549,30 +549,32 @@ function processCmd(text, commands, result) {
 
 //suggestions
 const suggestions = document.getElementById('suggestions')
-suggestions.textContent = ''
+suggestions.msg = document.querySelector('#suggestions>.msg')
+suggestions.msg.innerText = (window.ontouchstart ? 'Tap and hold ' : 'Hover ') + suggestions.msg.innerText
 suggestions.animatedRemoveChild = function(child) {
   if (child.classList.contains('hidden')) return
   child.classList.add('hidden')
   setTimeout(() => suggestions.removeChild(child), medAnimTime*2)
 }
+suggestions.firstStatic = suggestions.childNodes[0]
 suggestions.suffix = nonbreakSpace
 suggestions.updateChild = function(type, item, i) {
   if (type === 'error')
-    suggestions.errList.push(item)
-  for (; suggestions.children[i] && suggestions.children[i].classList.contains('hidden'); i++);
-  const existing = suggestions.children[i]
+    this.errList.push(item)
+  for (; this.childNodes[i] !== this.firstStatic && this.childNodes[i].classList.contains('hidden'); i++);
+  const existing = this.childNodes[i]
   if (existing != null) {
-    if (existing.type === type && similar(existing.textElem.innerText, item.text+suggestions.suffix)) {
-      existing.setItem(item, suggestions.suffix)
+    if (existing.type === type && similar(existing.textElem.innerText, item.text + this.suffix)) {
+      existing.setItem(item, this.suffix)
       return ++i
-    } else {
-      suggestions.animatedRemoveChild(existing)
+    } else if (existing !== this.firstStatic) {
+      this.animatedRemoveChild(existing)
     }
   }
-  const elem = suggestions.creator[type]()
-  elem.setItem(item, suggestions.suffix)
+  const elem = this.creator[type]()
+  elem.setItem(item, this.suffix)
   elem.type = type
-  suggestions.insertBefore(elem, suggestions.children[i])
+  this.insertBefore(elem, this.childNodes[i] || this.firstStatic)
   return ++i
 }
 suggestions.childUpdater = function() {
@@ -582,9 +584,11 @@ suggestions.childUpdater = function() {
     i = suggestions.updateChild(type, item, i)
   }
   function stop() {
-    for (; i < suggestions.childElementCount; i++) {
-      const item = suggestions.children[i]
-      suggestions.animatedRemoveChild(item)
+    for (; i < suggestions.childNodes.length; i++) {
+      const item = suggestions.childNodes[i]
+      if (item !== suggestions.firstStatic)
+        suggestions.animatedRemoveChild(item)
+      else break
     }
   }
   return {next, stop}

@@ -41,7 +41,7 @@ Contact email: gizapp@tutanota.com
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id='root'>
-      <div id='suggestions'></div>
+      <div id='suggestions'> <i class='msg'>for more info</i></div>
       <div id='shell' class='empty'>
         <span class='prefix' onclick='input.resetSelection()'>
           U<span class='hidden'>nderstandable </span>Pass<span class='hidden'>words</span>&gt;
@@ -49,10 +49,7 @@ Contact email: gizapp@tutanota.com
         <span class='input unstyled' contenteditable='true' spellcheck='false'></span>&nbsp;
         <div class='button emptyHidden insert-icon-enter' id='enter' onclick='this.parentNode.sendCommand()'>
           <span class='hidden'>run </span>
-        </div>
-        <div class='button insert-icon-down' onclick='input.onnavigate(-1)'></div>
-        <div class='button insert-icon-up' onclick='input.onnavigate(1)'></div>
-        <div class='button insert-icon-eye-open emptyHidden' onclick='input.toggleHide()'></div>
+        </div><div class='button insert-icon-down' onclick='input.onnavigate(-1)'></div><div class='button insert-icon-up' onclick='input.onnavigate(1)'></div><div class='button insert-icon-eye-open emptyHidden' onclick='input.toggleHide()'></div>
       </div>
       <hr/>
       <div id='doubleBuffer'>
