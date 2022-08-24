@@ -54,7 +54,7 @@ fs.readFile(`../${appName}/index.html`, 'utf8', function (err, data) {
   //data = data.replaceAll(/<\/script> ?<script>/g, '\n').replaceAll(/<\/style> ?<style>/g, '\n')
   data = data.replaceAll(/<\/script> ?<script>/g, '\n')
   finalStep = true
-  data = notice + mmz.parse(data).replaceAll('&nbsp;', '\u00A0').replaceAll('&emsp;', '\u2003').replaceAll('&ensp;', '\u2002').replaceAll('&emsp14;', '\u2005');
+  data = notice + mmz.parse(data).replaceAll('&nbsp;', '\u00A0').replaceAll('&emsp;', '\u2003').replaceAll('&ensp;', '\u2002').replaceAll('&emsp14;', '\u2005')
   if (data.includes('<script src'))
     throw 'unparsed script'
   fs.writeFile(`../../${appName}/index.html`, data, err => {if(err)throw err;});
