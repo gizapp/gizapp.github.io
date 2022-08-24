@@ -550,7 +550,11 @@ function processCmd(text, commands, result) {
 //suggestions
 const suggestions = document.getElementById('suggestions')
 suggestions.msg = document.querySelector('#suggestions>.msg')
-suggestions.msg.innerText = (window.ontouchstart ? 'Tap and hold ' : 'Hover ') + suggestions.msg.innerText
+suggestions.msg.innerText = (isTouchDevice() ? 'Tap and hold ' : 'Hover ') + suggestions.msg.innerText
+if (document.documentElement.clientWidth < rem2px * 48) {
+  suggestions.removeChild(suggestions.msg)
+  suggestions.parentNode.prepend(suggestions.msg)
+}
 suggestions.animatedRemoveChild = function(child) {
   if (child.classList.contains('hidden')) return
   child.classList.add('hidden')

@@ -60,6 +60,7 @@ Contact email: gizapp@tutanota.com
       <script src='custom.js'></script>
       <script>
         'use strict';
+        const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
         function addFonts() {
           const link = document.createElement("link")
           link.rel = "stylesheet"
@@ -235,7 +236,7 @@ Contact email: gizapp@tutanota.com
       <h2>FAQs</h2>
 
       <h4>Is the source available?</h4>
-      <p>Of course! The source is at <a href='https://github.com/gizapp/gizapp.github.io/tree/main/dev/up'>github.com/gizapp/gizapp.github.io/tree/main/dev/up</a></p>
+      <p>Of course! The source is at <a href='https://github.com/gizapp/gizapp.github.io/tree/main/dev/up'>github.com/gizapp/gizapp.github.io</a></p>
       <p>Running the source is <i>trivial</i>, you literally just need to clone the repository and open <loc>dev/up/index.html</loc> on a browser</p>
 
       <h4>Does this have a mobile app?</h4>

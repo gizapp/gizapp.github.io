@@ -207,6 +207,9 @@ h4 {
   font-weight:600;
   color:var(--colorFg);
 }
+.msg {
+  font-variation-settings: 'CASL' 1, 'slnt' -15;
+}
 #suggestions {
   --localColor:var(--color1);
   --localBg:var(--color1Bg);
@@ -227,12 +230,12 @@ h4 {
   margin:0;
   padding:0;
 }
-.msg {
-  font-variation-settings: 'CASL' 1, 'slnt' -15;
-}
 #suggestions.hot > span {
   --localColor:var(--colorFg);
   font-weight:600;
+}
+#suggestions > span:first-child {
+  margin-left:0;
 }
 #suggestions > span {
   animation: var(--medAnimTime) linear 0s 1 growIn;

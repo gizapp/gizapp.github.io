@@ -13,7 +13,6 @@ You should have received a copy of the GNU Affero General Public License along w
 Contact email: gizapp@tutanota.com
 */
 'use strict';
-const rem2px = parseFloat(rootStyle.fontSize)
 const minTooltipWidth = 6*rem2px
 const maxTooltipHeight = 10*rem2px
 const maxDownMovement = rem2px
