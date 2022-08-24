@@ -31,8 +31,6 @@ Contact email: gizapp@tutanota.com
     <meta name='twitter:title'>
     <meta name='twitter:description'>
     <meta name='twitter:image'>
-    <link rel="preload" href="https://fonts.gstatic.com/s/recursive/v34/8vIK7wMr0mhh-RQChyHuE2Za.woff2" as="font" crossorigin>
-    <link rel="preload" href="https://fonts.gstatic.com/s/recursive/v34/8vIK7wMr0mhh-RQChyHuHWZaC_w.woff2" as="font" crossorigin>
     <link rel='stylesheet' href='color.css'>
     <link rel='stylesheet' href='index.css'>
     <link rel='stylesheet' href='tooltip.css'>
@@ -66,7 +64,7 @@ Contact email: gizapp@tutanota.com
         function addFonts() {
           const link = document.createElement("link")
           link.rel = "stylesheet"
-          link.href = 'https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1'
+          link.href = 'https://fonts.googleapis.com/css2?family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap'
           document.head.appendChild(link)
         }
         if (navigator.serviceWorker) {
@@ -87,9 +85,8 @@ Contact email: gizapp@tutanota.com
           sel.addRange(range);
         }
         function assert(condition, message) {
-          if (!condition) {
+          if (!condition)
             throw new Error(message || 'Assertion failed');
-          }
         }
         const nonbreakSpace = '\u00A0'
         function similar(word1, word2) {
