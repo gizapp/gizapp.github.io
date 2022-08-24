@@ -98,9 +98,9 @@ setTimeout(() => { // avoid-initial-transition
   theme.setProperty('--longAnimTime', null)
 }, 1)
 
-const color1 = theme.getPropertyValue('--color1')
-const colorFg = theme.getPropertyValue('--colorFg')
-const colorBg = theme.getPropertyValue('--colorBg')
+let color1 = theme.getPropertyValue('--color1')
+let colorFg = theme.getPropertyValue('--colorFg')
+let colorBg = theme.getPropertyValue('--colorBg')
 theme.setProperty('--color1', colorBg) // hide-page
 theme.setProperty('--colorFg', colorBg)
 const showPage = () => {

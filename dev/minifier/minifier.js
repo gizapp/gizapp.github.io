@@ -5,6 +5,7 @@ var CleanCSS = require('clean-css')
 
 const appName = process.argv[2]
 const notice = process.argv[3]
+svgUrl = 'http://www.w3.org/2000/svg'
 require(`../${appName}/custom.js`) // custom.js is expected to define the global variables dynamicManifest and minifierProps
 customProps = {...dynamicManifest, ...minifierProps}
 customProps.keywords = customProps.categories.join(', ')

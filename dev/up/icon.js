@@ -17,16 +17,16 @@ function updateIcon(elem, icon, animatedState) {
   elem.setAttribute('viewBox', '0 0 64 64')
   elem.classList.add('inlineIcon')
   if (icon in animatedIconPaths) {
-    let path = document.createElementNS("http://www.w3.org/2000/svg", 'path')
+    let path = document.createElementNS(svgUrl, 'path')
     path.setAttribute('d', animatedIconPaths[icon]._static)
     path.style.fill = 'none'
     elem.appendChild(path)
-    path = document.createElementNS("http://www.w3.org/2000/svg", 'path')
+    path = document.createElementNS(svgUrl, 'path')
     path.setAttribute('d', animatedIconPaths[icon][animatedState])
     elem.animated = path
     for (const name in animatedIconPaths[icon]) {
       if (name[0] === '_') continue
-      const anim = document.createElementNS("http://www.w3.org/2000/svg", 'animate')
+      const anim = document.createElementNS(svgUrl, 'animate')
       anim.id = name
       anim.setAttribute('dur', medAnimTime + 'ms')
       anim.setAttribute('fill', 'freeze')
@@ -37,7 +37,7 @@ function updateIcon(elem, icon, animatedState) {
     }
     elem.appendChild(path)
   } else {
-    const path = document.createElementNS("http://www.w3.org/2000/svg", 'path')
+    const path = document.createElementNS(svgUrl, 'path')
     path.setAttribute('d', iconPaths[icon])
     path.style.fill = 'none'
     elem.appendChild(path)
@@ -45,7 +45,7 @@ function updateIcon(elem, icon, animatedState) {
   return elem
 }
 function createIcon(icon, animatedState) {
-  return updateIcon(document.createElementNS("http://www.w3.org/2000/svg", 'svg'), icon, animatedState)
+  return updateIcon(document.createElementNS(svgUrl, 'svg'), icon, animatedState)
 }
 window.addEventListener('load', () => {
   for (const icon in iconPaths)

@@ -57,10 +57,10 @@ Contact email: gizapp@tutanota.com
         <div class='shellBuffer result'></div>
       </div>
 
-      <script src='custom.js'></script>
       <script>
         'use strict';
-        const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0
+        const svgUrl = 'http://www.w3.org/2000/svg'
+        const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints + navigator.msMaxTouchPoints > 0
         function addFonts() {
           const link = document.createElement("link")
           link.rel = "stylesheet"
@@ -132,6 +132,7 @@ Contact email: gizapp@tutanota.com
         }
         const byClass = (parent, name) => parent.getElementsByClassName(name)[0]
       </script>
+      <script src='custom.js'></script>
       <script src='manifest.js'></script>
       <script src='theme.js'></script>
       <script src='tooltip.js'></script>
@@ -157,7 +158,7 @@ Contact email: gizapp@tutanota.com
       <p><strong>
         Make random, yet understandable sentences to use as passwords
       </strong></p>
-      <svg viewBox='0 0 896 640' style='margin:auto;display:block;width:min(100%, 45em);fill:var(--colorFg);stroke:none;font-variation-settings:"CASL" 1'>
+      <svg viewBox='23 17 850 600' style='margin:auto;display:block;width:min(100%, 45em);fill:var(--colorFg);stroke:none;font-variation-settings:"CASL" 1'>
         <style>
           .f{font-weight:300;fill:var(--color1)}
           .d{font-size:118%}
@@ -221,11 +222,11 @@ Contact email: gizapp@tutanota.com
         <ellipse class='c' cx='634.47' cy='441.39' rx='6.9246' ry='7.0592'/>
         <ellipse class='c' cx='579.92' cy='418.28' rx='14.99' ry='15.262'/>
         <text class='i' x='385.85373' y='362.29785' xml:space='default'>Visualize the sentence to make <tspan x='385.85373' dy='1.25em'>it even easier to remember!</tspan></text>
-        <path style='fill:#6d00ff' class='r s' d='M726.35 616V560.8H708V616'/>
-        <rect class='r s' style='fill:#383838' width='18.354' height='55.200001' x='708' y='339.99994'/>
-        <rect class='r s' style='fill:#ff0000' width='18.354' height='55.200001' x='708' y='395.19995'/>
-        <rect class='r s' style='fill:#fef300' width='18.354' height='55.200001' x='708' y='450.39996'/>
-        <rect class='r s' style='fill:#00ff90' width='18.354' height='55.200001' x='708' y='505.59998'/>
+        <rect class='r s' style='fill:#444' width='18.354' height='55.2' x='708' y='340'/>
+        <rect class='r s' style='fill:#f00' width='18.354' height='55.2' x='708' y='395.2'/>
+        <rect class='r s' style='fill:#ee0' width='18.354' height='55.2' x='708' y='450.4'/>
+        <rect class='r s' style='fill:#0f8' width='18.354' height='55.2' x='708' y='505.6'/>
+        <path style='fill:#60f' class='r s' d='M726.35 616V560.8H708V616'/>
         <text style='font-size:117%;text-anchor:end;font-weight:700;fill:var(--color1)' x='704.49' y='357.75'><tspan x='703' y='361'>0</tspan><tspan x='704.49' dy='2.8em'>25</tspan><tspan x='704.49' dy='2.8em'>50</tspan><tspan x='704.49' dy='2.8em'>75</tspan><tspan x='704.49' dy='2.8em'>100</tspan></text>
         <text style='font-weight:800;font-size:83%;text-anchor:end;fill:var(--color1)' x='703' y='594.87'>bits of<tspan x='703.99' dy='1em'>entropy</tspan></text>
         <text style='font-size:88%' x='731' y='375'><tspan x='731'>Nope!</tspan><tspan x='731' dy='3.7em'>Bad passwords</tspan><tspan x='731' dy='3.3em'>Unimportant </tspan><tspan x='731' dy='1.25em'>accounts</tspan><tspan x='731' dy='2.6em'>Email &amp; sensitive </tspan><tspan x='731' dy='1.25em'>accounts</tspan><tspan x='731' dy='2.1em'>Master passwords,</tspan><tspan x='731' dy='1.25em'>crypto wallets &amp;</tspan><tspan x='731' dy='1.25em'>important accounts</tspan></text>
