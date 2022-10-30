@@ -190,8 +190,11 @@
       targetNumber = input.value
   }
   function newDigitInput() {
-    const str = event.key.repeat(anim.length)
-    digitInput.value = event.key
+    let digit = event.key
+    if (isNaN(Number(digit)))
+      digit = digitInput.value ? digitInput.value[digitInput.value.length-1] : ''
+    const str = digit.repeat(anim.length)
+    digitInput.value = digit
     if (!animating && str !== lastNumber)
       animateStr(str);
     else
