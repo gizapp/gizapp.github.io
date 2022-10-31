@@ -27,6 +27,11 @@
     stroke-linecap:round;
     stroke-linejoin:round;
   }
+  #cmdPanel {
+    width:20em;
+    position:relative;
+    height:5em;
+  }
 </style>
 </head>
 <body>
@@ -67,7 +72,7 @@
   </svg>
 </center>
 <center>
-  <div style="width:20em;position:relative;height:5em">
+  <div id="cmdPanel">
     <div class="cmdEntry">
       <button style="height:100%;width:3em">▼</button><input onkeyup="newInput()" maxlength="6" style="height:100%;width:calc(100% - 3em)" placeholder="Enter number to animate"/>
     </div>
@@ -77,78 +82,74 @@
     <div class="cmdEntry">
       <button style="height:100%;width:3em">▼</button><button style="height:100%;width:calc(100% - 3em)">Animate</button>
     </div>
-    <script>
-      const entryHeight = 2
-      const spacing = 0.5
-      const minimizedWidth = 5
-      let cmdPanel = document.getElementsByTagName('script')
-      currentScript = cmdPanel[cmdPanel.length -1]
-      cmdPanel = currentScript.parentNode
-      cmdPanel.removeChild(currentScript)
-      mainPile = [...cmdPanel.children]
-      const maxZ = mainPile.length
-      for (const entry of mainPile) {
-        entry.style.height = entryHeight + 'em'
-        entry.navButton = entry.children[0]
-        entry.formFields = [...entry.children].slice(1)
-        entry.style.zIndex = maxZ
-      }
-      const makeDiscardButton = btn => {
-        btn.innerText = '▼'
-        btn.onclick = discardUI
-      }
-      makeDiscardButton(mainPile.at(-1).navButton)
-      mainPile[0].removeChild(mainPile[0].navButton)
-      mainPile[0].style.width = "100%"
-      delete mainPile[0].navButton
-      discardPile = []
-      let ondiscardui = null
-      function discardUI() {
-        if (mainPile.length > 1) {
-          const movedEntry = mainPile.pop()
-          if (ondiscardui)
-            ondiscardui(movedEntry)
-          discardPile.push(movedEntry)
-          movedEntry.style.top = entryHeight + spacing + 'em'
-          movedEntry.navButton.onclick = returnUI
-          movedEntry.navButton.innerText = '▲'
-          movedEntry.style.width = minimizedWidth + 'em'
-          if (movedEntry.ondiscard)
-            movedEntry.ondiscard()
-          for (const elem of movedEntry.formFields)
-            elem.setAttribute('disabled', 'disabled')
-          const zIndex = -mainPile.length + maxZ
-          movedEntry.ontransitionend = function (e) {
-            this.style.zIndex = zIndex
-            this.ontransitionend = null
-            ondiscardui = null
-          }
-          if (mainPile.at(-1).navButton)
-            makeDiscardButton(mainPile.at(-1).navButton)
-          ondiscardui = function (entry) {
-            if (movedEntry.ontransitionend)
-              movedEntry.ontransitionend()
-            ondiscardui = null
-          }
-        }
-      }
-      function returnUI() {
-        const movedEntry = discardPile.pop()
-        movedEntry.style.zIndex = maxZ
-        makeDiscardButton(movedEntry.navButton)
-        movedEntry.ontransitionend = null
-        movedEntry.style.width = null
-        movedEntry.style.top = 0 + 'em'
-        for (const elem of movedEntry.formFields)
-          elem.removeAttribute('disabled')
-        if (mainPile.at(-1).navButton)
-          mainPile.at(-1).navButton.onclick = null
-        mainPile.push(movedEntry)
-      }
-    </script>
   </div>
 </center>
 <script>
+  const entryHeight = 2
+  const spacing = 0.5
+  const minimizedWidth = 5
+  const cmdPanel = document.getElementById('cmdPanel')
+  mainPile = [...cmdPanel.children]
+  const maxZ = mainPile.length
+  for (const entry of mainPile) {
+    entry.style.height = entryHeight + 'em'
+    entry.navButton = entry.children[0]
+    entry.formFields = [...entry.children].slice(1)
+    entry.style.zIndex = maxZ
+  }
+  const makeDiscardButton = btn => {
+    btn.innerText = '▼'
+    btn.onclick = discardUI
+  }
+  makeDiscardButton(mainPile.at(-1).navButton)
+  mainPile[0].removeChild(mainPile[0].navButton)
+  mainPile[0].style.width = "100%"
+  delete mainPile[0].navButton
+  discardPile = []
+  let ondiscardui = null
+  function discardUI() {
+    if (mainPile.length > 1) {
+      const movedEntry = mainPile.pop()
+      if (ondiscardui)
+        ondiscardui(movedEntry)
+      discardPile.push(movedEntry)
+      movedEntry.style.top = entryHeight + spacing + 'em'
+      movedEntry.navButton.onclick = returnUI
+      movedEntry.navButton.innerText = '▲'
+      movedEntry.style.width = minimizedWidth + 'em'
+      if (movedEntry.ondiscard)
+        movedEntry.ondiscard()
+      for (const elem of movedEntry.formFields)
+        elem.setAttribute('disabled', 'disabled')
+      const zIndex = -mainPile.length + maxZ
+      movedEntry.ontransitionend = function (e) {
+        this.style.zIndex = zIndex
+        this.ontransitionend = null
+        ondiscardui = null
+      }
+      if (mainPile.at(-1).navButton)
+        makeDiscardButton(mainPile.at(-1).navButton)
+      ondiscardui = function (entry) {
+        if (movedEntry.ontransitionend)
+          movedEntry.ontransitionend()
+        ondiscardui = null
+      }
+    }
+  }
+  function returnUI() {
+    const movedEntry = discardPile.pop()
+    movedEntry.style.zIndex = maxZ
+    makeDiscardButton(movedEntry.navButton)
+    movedEntry.ontransitionend = null
+    movedEntry.style.width = null
+    movedEntry.style.top = 0 + 'em'
+    for (const elem of movedEntry.formFields)
+      elem.removeAttribute('disabled')
+    if (mainPile.at(-1).navButton)
+      mainPile.at(-1).navButton.onclick = null
+    mainPile.push(movedEntry)
+  }
+
   const digits = ['M-15 0c0 0 0 0 0 0M-15 0C-15-16-8-24 0-24M0-24C8-24 15-18 15 0m0 0c0 0 0 0 0 0M-15 0c0 0 0 0 0 0M15 0c0 0 0 0 0 0M15 0C15 18 8 24 0 24M0 24C-8 24-15 18-15 0','M-12-12c0 0 0 0 0 0M-12-12C-12-12 1-25 1-25M1-25c0 0 0 0 0 0M1-25C1-25 1 23 1 23M-12 23c0 0 0 0 0 0M12 23c0 0 0 0 0 0M12 23C12 23 0 23 0 23M0 23C0 23-12 23-12 23','M-12-12c0 0 0 0 0 0M-12-12C-12-18-8-24 0-24M0-24C8-24 12-20 12-11M12-11C12-2 0 5 0 5M0 5C0 5-12 12-12 23M13 23c0 0 0 0 0 0M13 23C13 23 1 23 1 23M1 23C1 23-12 23-12 23','M-11-17c0 0 0 0 0 0M-11-17C-11-17-8-24 0-24M0-24C8-24 12-20 12-12M12-12C12-6 8-1-2-1M-12 17c0 0 0 0 0 0M-2-1C8-1 12 3 12 12M12 12C12 20 8 24 0 24M0 24C-8 24-11 19-12 17','M-16 10c0 0 0 0 0 0M-16 10C-16 10 6-25 6-25M6-25c0 0 0 0 0 0M6-25C6-25 6 25 6 25M-16 10c0 0 0 0 0 0M15 10c0 0 0 0 0 0M15 10C15 10-1 10-1 10M-1 10C-1 10-16 10-16 10','M-2-4C-2-4-11-4-11-4M-11-4C-11-4-11-23-11-23M-11-23C-11-23 11-23 11-23M11-23c0 0 0 0 0 0M-12 17c0 0 0 0 0 0M-2-4C8-4 12 1 12 10M12 10C12 18 8 24 0 24M0 24C-8 24-11 19-12 17','M-15 0c0 0 0 0 0 0M-15 0C-15-16-7-24 1-24M1-24C8-24 11-21 11-21M11-21c0 0 0 0 0 0M-15 0c0 0 0 0 0 0M-14 10C-13-7 14-8 14 10M14 10C14 18 8 24 0 24M0 24C-8 24-15 18-15 0','M-15-23c0 0 0 0 0 0M-15-23C-15-23 15-23 15-23M15-23c0 0 0 0 0 0M15-23C15-23 6-10 1 2M1 2C-4 14-6 25-6 25M-6 25c0 0 0 0 0 0M-6 25c0 0 0 0 0 0M-6 25c0 0 0 0 0 0','M0-2C-7-2-13-6-13-13M-13-13C-13-20-7-24 0-24M0-24C7-24 13-21 13-13M13-13C13-5 7-2 0-2M0-2C-8-2-15 3-15 11M0-2C8-2 15 2 15 11M15 11C15 20 8 24 0 24M0 24C-8 24-15 20-15 11','M14-10C13 7-14 8-14-10M-14-10C-14-18-8-24 0-24M0-24C8-24 15-18 15 0M15 0c0 0 0 0 0 0M-11 21c0 0 0 0 0 0M15 0c0 0 0 0 0 0M15 0C15 16 7 24-1 24M-1 24C-8 24-11 21-11 21']
   const anim = document.getElementsByTagName('animate')
   const input = mainPile[0].formFields[0]
