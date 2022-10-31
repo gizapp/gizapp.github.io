@@ -1,14 +1,22 @@
-<html>
+<html style="background:#eff">
 <head>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Recursive:wght@300..800&display=swap');
+  body {
+    padding:2em 0;
+  }
   * {
     font-family:Recursive, sans-serif;
+    color:#05a;
   }
   h1 {
     font-size:5em;
     margin:0;
     font-weight:300;
+    color:#0ae;
+  }
+  hr {
+    margin:2em;
   }
   input {
     padding:0.5em;
@@ -23,7 +31,7 @@
   }
   svg {
     fill:none;
-    stroke:black;
+    stroke:#06f;
     stroke-linecap:round;
     stroke-linejoin:round;
   }
@@ -32,12 +40,26 @@
     position:relative;
     height:5em;
   }
+  button, input {
+    border: 0.1em solid #0ae;
+    border-radius:0.5em;
+  }
+  button {
+    background:#ddf0ff;
+  }
+  .left {
+    border-radius:0.5em 0 0 0.5em;
+  }
+  .right {
+    border-radius:0 0.5em 0.5em 0;
+    border-left:0;
+  }
 </style>
 </head>
 <body>
 <center>
   <svg viewBox="-90 -30 180 60"
-    style="stroke-width:2px;height:8em">
+    style="stroke-width:2px;height:8em;stroke:#0ae">
     <path d="M58-23H92M74-23V25M32-12C32-12 32-12 32-12M32-12C32-12 44-25 44-25M44-25C44-25 44-25 44-25M44-25C44-25 44-25 44-1M44-1C44 23 44 23 44 23M55 23C55 23 55 23 55 23M55 23C55 23 44 23 44 23M44 23C44 23 32 23 32 23M-11 0V0M-11 0C-11-16-3-24 5-24M5-24C12-24 15-21 15-21M15-21V-21M-11 0V0M4-3C11-3 18 1 18 10M18 10C18 18 12 24 4 24M4 24C-4 24-11 18-11 0M-43-12C-43-12-43-12-43-12M-43-12C-43-12-30-25-30-25M-30-25C-30-25-30-25-30-25M-30-25C-30-25-30-25-30-1M-30-1C-30 23-30 23-30 23M-19 23C-19 23-19 23-19 23M-19 23C-19 23-31 23-31 23M-31 23C-31 23-43 23-43 23M-80-24V24C-66 24-54 22-54 0-54-22-64-24-80-24Z"></path>
   </svg>
 </center>
@@ -47,40 +69,36 @@
 <hr/>
 <center>
   <svg viewBox="-18 -32 36 64"
-    style="stroke-width:3px;height:10em">
+    style="stroke-width:4px;height:12em">
     <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
-    style="stroke-width:3px;height:10em">
+    style="stroke-width:4px;height:12em">
     <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
-    style="stroke-width:3px;height:10em">
+    style="stroke-width:4px;height:12em">
     <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
-    style="stroke-width:3px;height:10em">
+    style="stroke-width:4px;height:12em">
     <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
-    style="stroke-width:3px;height:10em">
-    <path><animate fill="freeze" attributeName="d"></animate></path>
-  </svg>
-  <svg viewBox="-18 -32 36 64"
-    style="stroke-width:3px;height:10em">
+    style="stroke-width:4px;height:12em">
     <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
 </center>
 <center>
   <div id="cmdPanel">
     <div class="cmdEntry">
-      <button style="height:100%;width:3em">▼</button><input onkeyup="newInput()" maxlength="6" style="height:100%;width:calc(100% - 3em)" placeholder="Enter number to animate"/>
+      <button class="left" style="height:100%;width:3em">▼</button><input maxlength="5" style="height:100%;width:100%" placeholder="Enter number to animate"/>
     </div>
     <div class="cmdEntry">
-      <button style="height:100%;width:3em">▼</button><input onkeyup="newDigitInput()" maxlength="2" style="height:100%;width:calc(100% - 3em)" placeholder="Enter digit to animate"/>
+      <button class="left" style="height:100%;width:3em">▼</button><input class="right" maxlength="2" style="height:100%;width:calc(100% - 3em)" placeholder="Enter digit to animate"/>
     </div>
     <div class="cmdEntry">
-      <button style="height:100%;width:3em">▼</button><button style="height:100%;width:calc(100% - 3em)">Animate</button>
+      <button class="left" style="height:100%;width:3em">▼</button><button class="right" style="height:100%;width:calc(100% - 3em)">Animate</button>
     </div>
   </div>
 </center>
@@ -190,13 +208,13 @@
     else
       animating = false
   }
-  function newInput() {
+  input.onkeyup = function() {
     if (!animating && input.value !== lastNumber)
       animateStr(input.value);
     else
       targetNumber = input.value
   }
-  function newDigitInput() {
+  digitInput.onkeyup = function() {
     let digit = event.key
     if (isNaN(Number(digit)))
       digit = digitInput.value ? digitInput.value[digitInput.value.length-1] : ''
