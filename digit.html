@@ -43,27 +43,27 @@
 <center>
   <svg viewBox="-18 -32 36 64"
     style="stroke-width:3px;height:10em">
-    <path><animate id="close" dur="0.5s" fill="freeze" attributeName="d"></animate></path>
+    <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
     style="stroke-width:3px;height:10em">
-    <path><animate id="close" dur="0.5s" fill="freeze" attributeName="d"></animate></path>
+    <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
     style="stroke-width:3px;height:10em">
-    <path><animate id="close" dur="0.5s" fill="freeze" attributeName="d"></animate></path>
+    <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
     style="stroke-width:3px;height:10em">
-    <path><animate id="close" dur="0.5s" fill="freeze" attributeName="d"></animate></path>
+    <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
     style="stroke-width:3px;height:10em">
-    <path><animate id="close" dur="0.5s" fill="freeze" attributeName="d"></animate></path>
+    <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
   <svg viewBox="-18 -32 36 64"
     style="stroke-width:3px;height:10em">
-    <path><animate id="close" dur="0.5s" fill="freeze" attributeName="d"></animate></path>
+    <path><animate fill="freeze" attributeName="d"></animate></path>
   </svg>
 </center>
 <center>
@@ -72,7 +72,7 @@
       <button style="height:100%;width:3em">▼</button><input onkeyup="newInput()" maxlength="6" style="height:100%;width:calc(100% - 3em)" placeholder="Enter number to animate"/>
     </div>
     <div class="cmdEntry">
-      <button style="height:100%;width:3em">▼</button><input onkeyup="newDigitInput()" maxlength="1" style="height:100%;width:calc(100% - 3em)" placeholder="Enter digit to animate"/>
+      <button style="height:100%;width:3em">▼</button><input onkeyup="newDigitInput()" maxlength="2" style="height:100%;width:calc(100% - 3em)" placeholder="Enter digit to animate"/>
     </div>
     <div class="cmdEntry">
       <button style="height:100%;width:3em">▼</button><button style="height:100%;width:calc(100% - 3em)">Animate</button>
@@ -158,8 +158,14 @@
   let lastNumber = ''
   let targetNumber = ''
   const nullDigit = 'M0,0c0,0 0,0 0,0M0,0c0,0 0,0 0,0M0,0c0,0 0,0 0,0M0,0c0,0 0,0 0,0M0,0c0,0 0,0 0,0M0,0c0,0 0,0 0,0M0,0c0,0 0,0 0,0M0,0c0,0 0,0 0,0'
-  for (let elem of anim)
+  const animDuration = 1
+  for (let elem of anim) {
     elem.parentNode.setAttribute('d', nullDigit)
+    elem.setAttribute('dur', animDuration)
+    elem.setAttribute('calcMode', 'spline')
+    elem.setAttribute('keyTimes', '0;1')
+    elem.setAttribute('keySplines', '0.5 0 0.5 1')
+  }
   function animateDigit(anim, digit) {
     digit = Number(digit)
     anim.setAttribute('from', anim.getAttribute('to'));
@@ -179,7 +185,7 @@
   }
   anim[anim.length-1].onend = e => {
     if (targetNumber != lastNumber)
-      animateStr(input.value)
+      animateStr(targetNumber)
     else
       animating = false
   }
