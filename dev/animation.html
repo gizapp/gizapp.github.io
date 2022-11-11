@@ -1,0 +1,210 @@
+<html>
+<head>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Recursive:wght,CASL@300..800,1&display=swap');
+  * {
+    font-family:Recursive, monospace;
+    font-size:8;
+    transition:opacity 1s;
+  }
+  .btn:hover {
+    stroke:red;
+  }
+  .choice {
+    font-weight:350;
+  }
+  #hidden {
+    font-size:5;
+    opacity:0;
+  }
+  #heart {
+    display:none;
+  }
+  #prompt {
+    opacity:0;
+    font-size:5;
+  }
+  body {
+    margin:0;
+    text-align:center;
+  }
+  svg {
+    transition:opacity 1s;
+    width:100vmin;
+    height:100vmin;
+    user-select:none;
+  }
+  path {
+    fill:white;
+    stroke:black;
+    stroke-width:2;
+    vector-effect:non-scaling-stroke;
+    stroke-linecap:round;
+  }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox='-64-64 128 128' onmousemove='mousemove()'>
+  <text x=-39 y=-50 id='question'>Bé có yêu anh hong?<animate attributeName='x' to='-51' dur='1.3s' fill='freeze' begin='indefinite'/></text>
+  <path id='yes' class='btn' transform='translate(-32 -8) scale(0.5 0.5)' onclick='accept()' onmouseenter='showHidden(1)' onmouseleave='showHidden(0)' d='M 17,17 C 12.3,21.7 6.1,24 0,24 -6.1,24 -12.3,21.7 -17,17 M-17,17C-32,1.9 -21.4,-23.9 0,-23.9 21.4,-23.9 32,1.9 17,17'>
+    <animate attributeName='d'dur='1s' fill='freeze' begin='indefinite' onend='changeScene()' to='M 64,48 C 64,48 64,48 64,48 64,34 38,26 38,10 M 38,10 C 38,0 44.5,-5 51,-5 57.5,-5 64,0 64,10'/>
+  </path>
+  <text x=-38 y=16 class='choice'>Có</text>
+  <text x=-56 y=24 id='hidden'>Yêu anh rất nhiều &lt;3</text>
+  <path id='no' class='btn' transform='translate(32 -8) scale(0.5 0.5)' onclick='reject()' d='M 17,17 C 12.3,21.7 6.1,24 0,24 -6.1,24 -12.3,21.7 -17,17 M-17,17 C -32,1.9 -21.4,-23.9 0,-23.9 21.4,-23.9 32,1.9 17,17'>
+    <animate attributeName='d'dur='1s' fill='freeze' begin='indefinite' to='M -38,10 C -38,26 -64,34 -64,48 -64,48 -64,48 -64,48 M-64,10C -64,0 -57.5,-5 -51,-5 -44.5,-5 -38,0 -38,10'/>
+  </path>
+  <text x=20 y=16 class='choice'>Không</text>
+  <g>
+    <path id='heart' transform='translate(0 0)scale(0.5)' onclick='heartbeat()' d='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'>
+      <animate attributeName='d' dur='0.8s' onend='heartDone=true' begin='indefinite' keyTimes='0;0.4;1' values='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6;M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38;M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'/>
+    </path>
+    <animateTransform id='heartbeat' attributeName='transform' dur='1s' begin='indefinite' fill='freeze' type='scale'/>
+  </g>
+  <text x=-24 y=30 id='prompt'>Hun trái tym này i</text>
+  <script>
+    const V = (x,y) => ({
+      x:x,
+      y:y,
+      sub:o => V(x-o.x, y-o.y),
+      mad:(scalar, o) => V(x*scalar+o.x, y*scalar+o.y),
+      dot:o => x*o.x + y*o.y,
+      sign:o => Math.sign(x*o.x + y*o.y),
+      r90:() => V(y, -x),
+      dup:() => V(x, y),
+      toString:() => x+','+y
+    })
+    const svg = document.getElementsByTagName('svg')[0]
+    const choices = document.getElementsByClassName('choice')
+    const noBtn = document.getElementById('no')
+    const hiddenTxt = document.getElementById('hidden')
+    const questionTxt = document.getElementById('question')
+    const yesBtn = document.getElementById('yes')
+    const heart = document.getElementById('heart')
+    const promptTxt = document.getElementById('prompt')
+    const viewOffset = V(-64,-64)
+    const buttonPos = V(32,-8)
+    const circlePath = ['M', 17,17, 'C', 12.3,21.7, 6.1,24, 0,24, -6.1,24, -12.3,21.7, -17,17, 'M', -17,17, 'C', -32,1.9, -21.4,-23.9, 0,-23.9, 21.4,-23.9, 32,1.9, 17,17]
+    const distortedPath = ['M', 24,-4, 'C', 24,20, 8,4, 0,4, -8,4, -24,20, -24,-4, 'M', -24,-4, 'C', -24,-17.3, -13.3,-28, 0,-28, 13.3,-28, 24,-17.3, 24,-4]
+    const interpolate = (arr1, arr2, pos) => arr1.map((item, index) => typeof item === 'string' ? item : item - (item - arr2[index])*pos)
+    const transformTemplate = 'translate(32 -8) scale(0.5 0.5) rotate({rot})'
+    function mousemove() {
+      const pos = V(event.offsetX, event.offsetY).mad(128/svg.clientWidth, viewOffset)
+      const diff = pos.sub(buttonPos)
+      const dist = Math.pow(diff.dot(diff)/144, 0.3)
+      noBtn.setAttribute('d', interpolate(distortedPath, circlePath, Math.max(Math.min(dist-0.4, 1), 0)).join(' '))
+      noBtn.setAttribute('transform', transformTemplate.replace('{rot}', Math.atan2(-diff.x, diff.y)*57.3))
+    }
+    function reject() {
+      svg.style.opacity = 0
+    }
+    function accept() {
+      yesBtn.setAttribute('class', '')
+      noBtn.setAttribute('class', '')
+      svg.onmousemove = null
+      yesBtn.onmouseleave = null
+      yesBtn.onmouseenter = null
+      noBtn.setAttribute('transform', 'translate(32 -8) scale(0.5 0.5)')
+      noBtn.children[0].beginElement()
+      yesBtn.children[0].beginElement()
+      choices[1].style.opacity = 0
+      let i = 1
+      const nextText = 'Anh cũng yêu bé rất nhiều!'
+      questionTxt.children[0].beginElement()
+      let interval = setInterval(() => {
+        questionTxt.childNodes[0].nodeValue = nextText.slice(0, i) + questionTxt.textContent.slice(i)
+        if (++i > Math.max(questionTxt.textContent.length, nextText.length)) {
+          clearInterval(interval)
+          choices[0].style.opacity = 0
+          hiddenTxt.style.opacity = 0
+          promptTxt.style.opacity = 1
+        }
+      }, 50)
+    }
+    function showHidden(value) {
+      hiddenTxt.style.opacity = value
+    }
+    let hearts = []
+    const accel = -0.1
+    const drag = 0.998
+    let size = 1
+    function changeScene() {
+      yesBtn.style.display = 'none'
+      noBtn.style.display = 'none'
+      heart.style.display = 'unset'
+      setInterval(() => {
+        for (const path of hearts) {
+          path.anim.setAttribute('from', path.pos)
+          path.pos = path.pos.sub(path.vel)
+          const clamp = num => {
+            num = Math.round(num)
+            if (num < 0)
+              num = 0
+            else if (num > 15)
+              num = 15
+            else return num
+            svg.removeChild(path)
+            svg.appendChild(path)
+            return num
+          }
+          const index = clamp(path.pos.x/size/2+8) + clamp(path.pos.y/size/2+8)*16
+          path.vel = path.vel.mad(drag, V((mapX.charCodeAt(index)/255-0.5)*accel, (mapY.charCodeAt(index)/225-0.5)*accel))
+          console.log(path.pos, path.vel)
+          path.anim.setAttribute('to', path.pos)
+          path.anim.beginElement()
+        }
+      }, 100)
+    }
+    var heartDone = true
+    const svgUrl = 'http://www.w3.org/2000/svg'
+    const colors = [[255,200,220], [255,70,120]]
+    const heartPath = ['M', 32.5,-8.38, 'C', 32.5,16.6, 0,34.1, 0,34.1, 0,34.1, -32.5,16.6, -32.5,-8.38, -32.5,-33.4, 0,-33.4, 0,-8.38, 0,-33.4, 32.5,-33.4, 32.5,-8.38]
+    function heartbeat() {
+      promptTxt.style.opacity = 0
+      if (!heartDone) {
+        heart.children[0].onend = () => { heartDone = true; heartbeat() }
+      } else {
+        if (size < 3) {
+          heart.parentNode.children[1].setAttribute('from', size)
+          heart.parentNode.children[1].setAttribute('to', size += 0.2)
+          heart.parentNode.children[1].beginElement()
+        }
+        heart.children[0].beginElement()
+        heart.children[0].onend = ()=>heartDone = true
+        heart.style.stroke = 'rgb(' + 255*((size-1)/2) + ',0,0)'
+        heartDone = false
+        for (let i = 0; i < 4*size; i++) {
+          const path = document.createElementNS(svgUrl, 'path')
+          const animate = document.createElementNS(svgUrl, 'animateTransform')
+          const scale = Math.pow(Math.random(),2)*0.11+0.04
+          path.setAttribute('d', heartPath.map(item => typeof item == 'string' ? item : item*scale).join(' '))
+          path.style.stroke = 'none'
+          path.pos = V((Math.random()-0.5)*10*size, (Math.random()-0.3)*10*size)
+          path.vel = V((Math.random()-0.5)*3, (Math.random()-0.5)*3)
+          path.style.fill = 'rgb('+colors[0].map((c,i) => c+Math.random()*(colors[1][i]-c)).join(',')+')'
+          path.anim = animate
+          animate.setAttribute('attributeName', 'transform')
+          animate.setAttribute('type', 'translate')
+          animate.setAttribute('dur', '100ms')
+          path.appendChild(animate)
+          svg.prepend(path)
+          hearts.push(path)
+        }
+      }
+    }
+    const mapX = '\xff\xff\xfd\xea\xa0/\x08:\xc6\xf9\xddy\x1e\x02\x00\x00\xff\xfb\xe8\xc4\x8dM\x27B\xc1\xe4\xc5\x86A\x17\x04\x00\xfd\xe7\xa2`h\x95\x7fe\xad\x9d}\x9f\xa1]\x18\x02\xf6\xbfR"[\xc2\xc5\x96\x8bRF\xa5\xdd\xad?\x09\xea\x98+\x14[\xce\xe4\xb4d%2\xa3\xeb\xd4f\x14\xe6\x8b#\x11Y\xd0\xf0\xbdG\x0f.\xa5\xee\xdct\x19\xea\x99)\x0eJ\xbd\xef\xc1<\x0eA\xb5\xf1\xd6f\x15\xf4\xb5=\x0b%y\xc2\xb2K<\x85\xda\xf4\xc2I\x0b\xfc\xd6m\x1a\x0a(\x5c|\x82\xa3\xd7\xf5\xe5\x92)\x03\xfe\xf0\xafG\x0f\x06\x15I\xb6\xea\xf9\xf1\xb9P\x10\x01\xff\xfc\xe2\x94:\x0c\x05:\xc5\xfa\xf3\xc5j\x1d\x03\x00\xff\xff\xf9\xda\x90>\x13;\xc4\xec\xc2o%\x06\x00\x00\xff\xff\xff\xf8\xdd\x9fQO\xb1\xb0c"\x07\x00\x00\x00\xff\xff\xff\xff\xfb\xe7\xb6\x84{J\x19\x05\x00\x00\x00\x00\xff\xff\xff\xff\xff\xfd\xef\xb7H\x10\x03\x00\x00\x00\x00\x00\xff\xff\xff\xff\xff\xff\xfb\xc5:\x04\x00\x00\x00\x00\x00\x00'
+    const mapY = '\xff\xff\xfe\xfa\xf6\xf8\xfc\xff\xff\xfc\xf8\xf6\xfa\xfe\xff\xff\xff\xfb\xeb\xcd\xb8\xc0\xdb\xf4\xf4\xdb\xc1\xb8\xcc\xe9\xfb\xff\xfd\xe9\xa6Y7Ay\xc4\xc5{B7W\xa3\xe8\xfd\xf6\xc2T\x15\x05\x09+mo-\x0a\x05\x14R\xc0\xf5\xdb\x9b=\x1b\x15\x10\x1824\x1a\x10\x16\x1b<\x98\xd9\x8f\x82sm_:(*+(9_mr\x81\x8f2g\xbc\xd8\xbba"\x12\x12"_\xba\xd8\xbdj2\x0cH\xc1\xf5\xeb\xaaY33X\xa8\xea\xf6\xc4L\x0d\x03(\x91\xe5\xf9\xea\xc9\xac\xab\xc8\xea\xf9\xe7\x95+\x04\x01\x0fO\xb8\xf2\xfc\xf9\xf2\xf1\xf9\xfd\xf2\xbbR\x10\x01\x00\x03\x1cj\xc6\xf3\xfd\xfe\xfe\xfe\xf4\xc8m\x1e\x03\x00\x00\x00\x06%o\xc2\xef\xfc\xfc\xf0\xc5r&\x06\x00\x00\x00\x00\x00\x07!a\xb1\xe0\xe1\xb4e#\x07\x00\x00\x00\x00\x00\x00\x00\x04\x18J\x87\x88L\x1a\x05\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x0e!!\x0e\x03\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x02\x02\x01\x00\x00\x00\x00\x00\x00'
+
+    //const safeChar = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"i~`!@#$%^&*()_+-={}|[]\;:<>?,./'
+    //let newMapX = ''
+    //for (let i=0; i < mapX.length; i+=4)
+    //  newMapX += safeChar.includes(mapX.charAt(i)) ? mapX.charAt(i) : '\\x'+mapX.charCodeAt(i).toString(16).padStart(2,'0')
+    //let newMapY = ''
+    //for (let i=0; i < mapY.length; i+=4)
+    //  newMapY += safeChar.includes(mapY.charAt(i)) ? mapY.charAt(i) : '\\x'+mapY.charCodeAt(i).toString(16).padStart(2,'0')
+    //console.log(newMapX)
+    //console.log(newMapY)
+  </script>
+</svg>
+</body>
+</html>
