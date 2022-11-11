@@ -37,31 +37,32 @@
   path {
     fill:white;
     stroke:black;
-    stroke-width:2;
-    vector-effect:non-scaling-stroke;
+    stroke-width:1;
     stroke-linecap:round;
+    stroke-linejoin:round;
   }
 </style>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox='-64-64 128 128' onmousemove='mousemove()'>
-  <text x=-39 y=-50 id='question'>Bé có yêu anh hong?<animate attributeName='x' to='-51' dur='1.3s' fill='freeze' begin='indefinite'/></text>
-  <path id='yes' class='btn' transform='translate(-32 -8) scale(0.5 0.5)' onclick='accept()' onmouseenter='showHidden(1)' onmouseleave='showHidden(0)' d='M 17,17 C 12.3,21.7 6.1,24 0,24 -6.1,24 -12.3,21.7 -17,17 M-17,17C-32,1.9 -21.4,-23.9 0,-23.9 21.4,-23.9 32,1.9 17,17'>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox='-80 -80 160 160'>
+  <text x=-27 y=-60 id='greeting'>Hé lô người đẹp!</text>
+  <text x=-40 y=-50 id='question'>Bé có người yêu chưa?<animate attributeName='x' to='-51' dur='1.3s' fill='freeze' begin='indefinite'/></text>
+  <path id='yes' class='btn' transform='translate(-32 -8) scale(0.5 0.5)' onclick='accept()' d='M 17,17 C 12.3,21.7 6.1,24 0,24 -6.1,24 -12.3,21.7 -17,17 M-17,17C-32,1.9 -21.4,-23.9 0,-23.9 21.4,-23.9 32,1.9 17,17'>
     <animate attributeName='d'dur='1s' fill='freeze' begin='indefinite' onend='changeScene()' to='M 64,48 C 64,48 64,48 64,48 64,34 38,26 38,10 M 38,10 C 38,0 44.5,-5 51,-5 57.5,-5 64,0 64,10'/>
   </path>
-  <text x=-38 y=16 class='choice'>Có</text>
+  <text x=-42 y=16 class='choice'>Chưa<animate attributeName='x' to='-38' dur='0.5s' fill='freeze' begin='indefinite'/></text>
   <text x=-56 y=24 id='hidden'>Yêu anh rất nhiều &lt;3</text>
   <path id='no' class='btn' transform='translate(32 -8) scale(0.5 0.5)' onclick='reject()' d='M 17,17 C 12.3,21.7 6.1,24 0,24 -6.1,24 -12.3,21.7 -17,17 M-17,17 C -32,1.9 -21.4,-23.9 0,-23.9 21.4,-23.9 32,1.9 17,17'>
     <animate attributeName='d'dur='1s' fill='freeze' begin='indefinite' to='M -38,10 C -38,26 -64,34 -64,48 -64,48 -64,48 -64,48 M-64,10C -64,0 -57.5,-5 -51,-5 -44.5,-5 -38,0 -38,10'/>
   </path>
-  <text x=20 y=16 class='choice'>Không</text>
+  <text x=26 y=16 class='choice'>Rồi<animate attributeName='x' to='21' dur='0.5s' fill='freeze' begin='indefinite'/></text>
   <g>
-    <path id='heart' transform='translate(0 0)scale(0.5)' onclick='heartbeat()' d='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'>
-      <animate attributeName='d' dur='0.8s' onend='heartDone=true' begin='indefinite' keyTimes='0;0.4;1' values='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6;M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38;M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'/>
+    <path id='heart' transform='translate(0 0)scale(0.5)' onclick='heartbeat()' keytimes='0;0.3;1' d='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'>
+      <animate attributeName='d' dur='0.6s' onend='heartDone=true' begin='indefinite' fill='freeze' keyTimes='0;0.4;1' values='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6;M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38;M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'/>
     </path>
-    <animateTransform id='heartbeat' attributeName='transform' dur='1s' begin='indefinite' fill='freeze' type='scale'/>
+    <animateTransform id='heartbeat' attributeName='transform' dur='0.6s' begin='indefinite' fill='freeze' type='scale'/>
   </g>
-  <text x=-24 y=30 id='prompt'>Hun trái tym này i</text>
+  <text x=-23 y=30 id='prompt'>Hun trái tym này i</text>
   <script>
     const V = (x,y) => ({
       x:x,
@@ -79,17 +80,18 @@
     const noBtn = document.getElementById('no')
     const hiddenTxt = document.getElementById('hidden')
     const questionTxt = document.getElementById('question')
+    const greetingTxt = document.getElementById('greeting')
     const yesBtn = document.getElementById('yes')
     const heart = document.getElementById('heart')
     const promptTxt = document.getElementById('prompt')
-    const viewOffset = V(-64,-64)
+    const viewOffset = V(-80,-80)
     const buttonPos = V(32,-8)
     const circlePath = ['M', 17,17, 'C', 12.3,21.7, 6.1,24, 0,24, -6.1,24, -12.3,21.7, -17,17, 'M', -17,17, 'C', -32,1.9, -21.4,-23.9, 0,-23.9, 21.4,-23.9, 32,1.9, 17,17]
-    const distortedPath = ['M', 24,-4, 'C', 24,20, 8,4, 0,4, -8,4, -24,20, -24,-4, 'M', -24,-4, 'C', -24,-17.3, -13.3,-28, 0,-28, 13.3,-28, 24,-17.3, 24,-4]
+    const distortedPath = ['M', 24,-4, 'C', 24,20, 8,1, 0,1, -8,1, -24,20, -24,-4, 'M', -24,-4, 'C', -24,-17.3, -13.3,-28, 0,-28, 13.3,-28, 24,-17.3, 24,-4]
     const interpolate = (arr1, arr2, pos) => arr1.map((item, index) => typeof item === 'string' ? item : item - (item - arr2[index])*pos)
     const transformTemplate = 'translate(32 -8) scale(0.5 0.5) rotate({rot})'
     function mousemove() {
-      const pos = V(event.offsetX, event.offsetY).mad(128/svg.clientWidth, viewOffset)
+      const pos = V(event.offsetX, event.offsetY).mad(160/svg.clientWidth, viewOffset)
       const diff = pos.sub(buttonPos)
       const dist = Math.pow(diff.dot(diff)/144, 0.3)
       noBtn.setAttribute('d', interpolate(distortedPath, circlePath, Math.max(Math.min(dist-0.4, 1), 0)).join(' '))
@@ -98,35 +100,54 @@
     function reject() {
       svg.style.opacity = 0
     }
-    function accept() {
-      yesBtn.setAttribute('class', '')
-      noBtn.setAttribute('class', '')
-      svg.onmousemove = null
-      yesBtn.onmouseleave = null
-      yesBtn.onmouseenter = null
-      noBtn.setAttribute('transform', 'translate(32 -8) scale(0.5 0.5)')
-      noBtn.children[0].beginElement()
-      yesBtn.children[0].beginElement()
-      choices[1].style.opacity = 0
-      let i = 1
-      const nextText = 'Anh cũng yêu bé rất nhiều!'
-      questionTxt.children[0].beginElement()
+    function animateText(elem, nextText) {
+      let i = 1, oldText = elem.textContent
+      if (elem.children[0])
+        elem.children[0].beginElement()
       let interval = setInterval(() => {
-        questionTxt.childNodes[0].nodeValue = nextText.slice(0, i) + questionTxt.textContent.slice(i)
-        if (++i > Math.max(questionTxt.textContent.length, nextText.length)) {
+        elem.childNodes[0].nodeValue = nextText.slice(0, i) + oldText.slice(i)
+        if (++i > Math.max(oldText.length, nextText.length))
           clearInterval(interval)
+      }, 50)
+    }
+    function accept() {
+      questionTxt.children[0].setAttribute('to', -39)
+      animateText(questionTxt, 'Bé có yêu anh hong?')
+      animateText(choices[0], 'Có')
+      animateText(choices[1], 'Không')
+      animateText(greetingTxt, '')
+      questionTxt.children[0].beginElement()
+      yesBtn.onmouseleave = () => showHidden(0)
+      yesBtn.onmouseenter = () => showHidden(1)
+      svg.onmousemove = () => mousemove()
+      yesBtn.onclick = function() {
+        hiddenTxt.style.opacity = 1
+        yesBtn.setAttribute('class', '')
+        noBtn.setAttribute('class', '')
+        svg.onmousemove = null
+        yesBtn.onmouseleave = null
+        yesBtn.onmouseenter = null
+        svg.onmousemove = null
+        noBtn.setAttribute('transform', 'translate(32 -8) scale(0.5 0.5)')
+        noBtn.children[0].beginElement()
+        yesBtn.children[0].beginElement()
+        choices[1].style.opacity = 0
+        questionTxt.children[0].setAttribute('to', -50)
+        animateText(questionTxt, 'Anh cũng yêu bé rất nhiều!')
+        questionTxt.children[0].beginElement()
+        setTimeout(() => {
           choices[0].style.opacity = 0
           hiddenTxt.style.opacity = 0
           promptTxt.style.opacity = 1
-        }
-      }, 50)
+        }, 2000)
+      }
     }
     function showHidden(value) {
       hiddenTxt.style.opacity = value
     }
     let hearts = []
-    const accel = -0.1
-    const drag = 0.998
+    const accel = -0.2
+    const drag = 0.997
     let size = 1
     function changeScene() {
       yesBtn.style.display = 'none'
@@ -147,41 +168,56 @@
             svg.appendChild(path)
             return num
           }
-          const index = clamp(path.pos.x/size/2+8) + clamp(path.pos.y/size/2+8)*16
+          const index = clamp(path.pos.x/size/2.3+7.5) + clamp(path.pos.y/size/2.3+7)*16
+          path.style.opacity = 1
           path.vel = path.vel.mad(drag, V((mapX.charCodeAt(index)/255-0.5)*accel, (mapY.charCodeAt(index)/225-0.5)*accel))
-          console.log(path.pos, path.vel)
           path.anim.setAttribute('to', path.pos)
           path.anim.beginElement()
         }
       }, 100)
     }
     var heartDone = true
+    var roundHeart = false
     const svgUrl = 'http://www.w3.org/2000/svg'
     const colors = [[255,200,220], [255,70,120]]
     const heartPath = ['M', 32.5,-8.38, 'C', 32.5,16.6, 0,34.1, 0,34.1, 0,34.1, -32.5,16.6, -32.5,-8.38, -32.5,-33.4, 0,-33.4, 0,-8.38, 0,-33.4, 32.5,-33.4, 32.5,-8.38]
     function heartbeat() {
       promptTxt.style.opacity = 0
       if (!heartDone) {
-        heart.children[0].onend = () => { heartDone = true; heartbeat() }
+        heart.parentNode.children[1].onend = () => { heartDone = true; heartbeat() }
       } else {
         if (size < 3) {
           heart.parentNode.children[1].setAttribute('from', size)
           heart.parentNode.children[1].setAttribute('to', size += 0.2)
           heart.parentNode.children[1].beginElement()
+          heart.children[0].beginElement()
+        } else if (!roundHeart) {
+          heart.children[0].setAttribute('values', 'M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6;M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38')
+          heart.children[0].setAttribute('keyTimes', '0;1')
+          heart.children[0].setAttribute('dur', '0.3s')
+          heart.parentNode.children[1].setAttribute('values', size+';'+(size+0.3)+';'+size)
+          heart.parentNode.children[1].setAttribute('keyTimes', '0;0.3;1')
+          roundHeart = true
+          heart.children[0].beginElement()
         }
-        heart.children[0].beginElement()
-        heart.children[0].onend = ()=>heartDone = true
-        heart.style.stroke = 'rgb(' + 255*((size-1)/2) + ',0,0)'
+        heart.parentNode.children[1].beginElement()
+        heart.parentNode.children[1].onend = ()=>heartDone = true
+        const pos = (size-1)/2
+        heart.style.fill = 'rgb(255,255,255,' + (1-pos*pos*pos*0.1) + ')'
+        heart.style.strokeWidth = 1-pos*0.3
+        heart.style.stroke = 'rgb(' + 255*pos + ',0,0)'
+        questionTxt.style.fill = 'rgb(' + 128*pos + ',0,0)'
         heartDone = false
         for (let i = 0; i < 4*size; i++) {
           const path = document.createElementNS(svgUrl, 'path')
           const animate = document.createElementNS(svgUrl, 'animateTransform')
-          const scale = Math.pow(Math.random(),2)*0.11+0.04
+          const scale = (Math.pow(Math.random(),4)*0.07+0.025)*size
           path.setAttribute('d', heartPath.map(item => typeof item == 'string' ? item : item*scale).join(' '))
           path.style.stroke = 'none'
           path.pos = V((Math.random()-0.5)*10*size, (Math.random()-0.3)*10*size)
-          path.vel = V((Math.random()-0.5)*3, (Math.random()-0.5)*3)
+          path.vel = V((Math.random()-0.5)*4, (Math.random()-0.5)*4)
           path.style.fill = 'rgb('+colors[0].map((c,i) => c+Math.random()*(colors[1][i]-c)).join(',')+')'
+          path.style.opacity = 0
           path.anim = animate
           animate.setAttribute('attributeName', 'transform')
           animate.setAttribute('type', 'translate')
