@@ -44,7 +44,7 @@
 </style>
 </head>
 <body>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox='-80 -80 160 160'>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox='-96 -80 192 160'>
   <text x=-27 y=-60 id='greeting'>Hé lô người đẹp!</text>
   <text x=-40 y=-50 id='question'>Bé có người yêu chưa?<animate attributeName='x' to='-51' dur='1.3s' fill='freeze' begin='indefinite'/></text>
   <path id='yes' class='btn' transform='translate(-32 -8) scale(0.5 0.5)' onclick='accept()' d='M 17,17 C 12.3,21.7 6.1,24 0,24 -6.1,24 -12.3,21.7 -17,17 M-17,17C-32,1.9 -21.4,-23.9 0,-23.9 21.4,-23.9 32,1.9 17,17'>
@@ -84,14 +84,14 @@
     const yesBtn = document.getElementById('yes')
     const heart = document.getElementById('heart')
     const promptTxt = document.getElementById('prompt')
-    const viewOffset = V(-80,-80)
+    const viewOffset = V(-96,-80)
     const buttonPos = V(32,-8)
     const circlePath = ['M', 17,17, 'C', 12.3,21.7, 6.1,24, 0,24, -6.1,24, -12.3,21.7, -17,17, 'M', -17,17, 'C', -32,1.9, -21.4,-23.9, 0,-23.9, 21.4,-23.9, 32,1.9, 17,17]
     const distortedPath = ['M', 24,-4, 'C', 24,20, 8,1, 0,1, -8,1, -24,20, -24,-4, 'M', -24,-4, 'C', -24,-17.3, -13.3,-28, 0,-28, 13.3,-28, 24,-17.3, 24,-4]
     const interpolate = (arr1, arr2, pos) => arr1.map((item, index) => typeof item === 'string' ? item : item - (item - arr2[index])*pos)
     const transformTemplate = 'translate(32 -8) scale(0.5 0.5) rotate({rot})'
     function mousemove() {
-      const pos = V(event.offsetX, event.offsetY).mad(160/svg.clientWidth, viewOffset)
+      const pos = V(event.offsetX*192, event.offsetY*160).mad(1/svg.clientWidth, viewOffset)
       const diff = pos.sub(buttonPos)
       const dist = Math.pow(diff.dot(diff)/144, 0.3)
       noBtn.setAttribute('d', interpolate(distortedPath, circlePath, Math.max(Math.min(dist-0.4, 1), 0)).join(' '))
