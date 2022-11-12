@@ -205,8 +205,8 @@
         const pos = (size-1)/2
         heart.style.fill = 'rgb(255,255,255,' + (1-pos*pos*pos*0.1) + ')'
         heart.style.strokeWidth = 1-pos*0.3
-        heart.style.stroke = 'rgb(' + 255*pos + ',0,0)'
-        questionTxt.style.fill = 'rgb(' + 128*pos + ',0,0)'
+        heart.style.stroke = 'rgb(' + 255*pos + ',' + 60*pos + ',' + 100*pos + ')'
+        questionTxt.style.fill = 'rgb(' + 128*pos + ',' + 30*pos + ',' + 50*pos + ')'
         heartDone = false
         for (let i = 0; i < 4*size; i++) {
           const path = document.createElementNS(svgUrl, 'path')
