@@ -175,7 +175,7 @@
       setInterval(() => {
         for (const path of hearts) {
           const inside = inHeart(path.pos)
-          path.accel = path.pos.sub(path.attraction).mul(0.01)
+          path.accel = path.pos.sub(path.attraction).mul(0.02)
           if (!inside && !path.top) {
             path.top = true
             svg.removeChild(path)
@@ -183,19 +183,6 @@
           }
           path.anim.setAttribute('from', path.pos)
           path.pos = path.pos.sub(path.vel)
-          //const clamp = num => {
-          //  num = Math.round(num)
-          //  if (num < 0)
-          //    num = 0
-          //  else if (num > 31)
-          //    num = 31
-          //  else return num
-          //  svg.removeChild(path)
-          //  svg.appendChild(path)
-          //  return num
-          //}
-          //const index = clamp(path.pos.x/size+15.6) + clamp(path.pos.y/size+14)*32
-          //const accelx = mapX[index], accely = mapY[index]
           path.vel = path.vel.mad(drag, path.accel)
           path.anim.setAttribute('to', path.pos)
           path.anim.beginElement()
@@ -242,7 +229,7 @@
           const pos = Math.min((size-1)/2, 1)
           heart.style.fill = 'rgb(0,0,0,' + (1-pos*pos*pos) + ')'
           questionTxt.style.fill = 'rgb(' + 255 + ',' + (255-90*pos) + ',' + (255-70*pos) + ')'
-          heart.style.stroke = 'rgb(' + 255 + ',' + (255-190*pos) + ',' + (255-150*pos) + ','+(1-pos*pos*0.7)+ ')'
+          heart.style.stroke = 'rgb(' + 255 + ',' + (255-190*pos) + ',' + (255-150*pos) + ','+(1-pos*pos*0.6)+ ')'
         } else if (!roundHeart) {
           heart.setAttribute('d', 'M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38')
           setTimeout(() => {
@@ -256,6 +243,13 @@
           heart.parentNode.children[1].setAttribute('values', size+';'+(size+0.3)+';'+size)
           heart.parentNode.children[1].setAttribute('keyTimes', '0;0.3;1')
           roundHeart = true
+          window.addEventListener('devicemotion', event => {
+            const a = event.acceleration
+            const pow = Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z)
+            for (const path of hearts) {
+              path.vel = path.vel.sub(randDonut().mul(pow*0.1))
+            }
+          })
           heart.children[0].beginElement()
           heart.style.stroke = 'rgb(0,0,0,0)'
           heart.style.fill = 'rgb(0,0,0,0)'
@@ -270,7 +264,7 @@
           for (let i = 0; i < 32; i++) {
             const path = document.createElementNS(svgUrl, 'path')
             const animate = document.createElementNS(svgUrl, 'animateTransform')
-            const scale = (Math.pow(Math.random(),4)*0.05+0.05)*Math.sqrt(size)
+            const scale = (Math.pow(Math.random(),4)*0.05+0.06)*Math.sqrt(size)
             path.setAttribute('d', heartPath.map(item => typeof item == 'string' ? item : item*scale).join(' '))
             path.style.stroke = 'none'
             path.pos = randHeart()
