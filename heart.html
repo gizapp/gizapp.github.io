@@ -237,7 +237,7 @@
           path.vel = V(path.vel.x *mul, path.vel.y *mul)
         }
         if (!roundHeart) {
-          for (let i = 0; i < 128; i++) {
+          for (let i = 0; i < 64; i++) {
             const path = document.createElementNS(svgUrl, 'path')
             const animate = document.createElementNS(svgUrl, 'animateTransform')
             const scale = (Math.pow(Math.random(),4)*0.04+0.04)*Math.sqrt(size)
