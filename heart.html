@@ -160,7 +160,7 @@
     const pow = (num,pow) => Math.sign(num) * Math.pow(Math.abs(num), pow)
     let hearts = []
     const accel = -1
-    const drag = 0.97
+    const drag = 0.96
     let size = 1
     const inHeart = pos => {
       const point = svg.createSVGPoint()
@@ -247,7 +247,7 @@
             const a = event.acceleration
             const pow = Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z)
             for (const path of hearts) {
-              path.vel = path.vel.sub(randDonut().mul(pow*0.1))
+              path.vel = path.vel.sub(randDonut().mul(pow*0.01))
             }
           })
           heart.children[0].beginElement()
