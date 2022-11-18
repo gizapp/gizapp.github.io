@@ -267,7 +267,7 @@
           path.vel = path.vel.sub(randDonut())
         }
         if (!roundHeart) {
-          for (let i = 0; i < 48; i++) {
+          for (let i = 0; i < 32; i++) {
             const path = document.createElementNS(svgUrl, 'path')
             const animate = document.createElementNS(svgUrl, 'animateTransform')
             const scale = (Math.pow(Math.random(),4)*0.05+0.05)*Math.sqrt(size)
