@@ -5,7 +5,7 @@
   * {
     font-family:Recursive, monospace;
     font-size:8;
-    transition:opacity 1s;
+    transition:opacity 1s, fill 1s, stroke 1s;
   }
   .btn:hover {
     stroke:red;
@@ -43,6 +43,11 @@
   text {
     fill:white;
   }
+  .miniheart {
+    stroke:none;
+    pointer-events:none;
+    opacity:0;
+  }
 </style>
 </head>
 <body>
@@ -60,7 +65,7 @@
   <text x=26 y=16 class='choice'>Rồi<animate attributeName='x' to='21' dur='0.5s' fill='freeze' begin='indefinite'/></text>
   <g>
     <path id='heart' transform='translate(0 0)scale(0.5)' onclick='heartbeat()' keytimes='0;0.3;1' d='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'>
-      <animate attributeName='d' dur='0.6s' onend='heartDone=true' begin='indefinite' fill='freeze' keyTimes='0;0.4;1' values='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6;M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38;M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'/>
+      <animate attributeName='d' dur='0.6s' onend='heartBeatDone=true' begin='indefinite' fill='freeze' keyTimes='0;0.4;1' values='M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6;M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38;M 26,-6 C 26,10 0,18 0,32 0,18 -26,10 -26,-6 -26,-26 0,-26 0,-6 0,-26 26,-26 26,-6'/>
     </path>
     <animateTransform id='heartbeat' attributeName='transform' dur='0.6s' begin='indefinite' fill='freeze' type='scale'/>
   </g>
@@ -87,31 +92,39 @@
     const yesBtn = document.getElementById('yes')
     const heart = document.getElementById('heart')
     const promptTxt = document.getElementById('prompt')
-    const viewOffset = V(-96,-80)
-    const buttonPos = V(32,-8)
-    const circlePath = ['M', 17,17, 'C', 12.3,21.7, 6.1,24, 0,24, -6.1,24, -12.3,21.7, -17,17, 'M', -17,17, 'C', -32,1.9, -21.4,-23.9, 0,-23.9, 21.4,-23.9, 32,1.9, 17,17]
-    const distortedPath = ['M', 24,-4, 'C', 24,20, 8,1, 0,1, -8,1, -24,20, -24,-4, 'M', -24,-4, 'C', -24,-17.3, -13.3,-28, 0,-28, 13.3,-28, 24,-17.3, 24,-4]
-    const interpolate = (arr1, arr2, pos) => arr1.map((item, index) => typeof item === 'string' ? item : item - (item - arr2[index])*pos)
-    const transformTemplate = 'translate(32 -8) scale(0.5 0.5) rotate({rot})'
-    function mousemove() {
-      const pos = V(event.offsetX*192, event.offsetY*160).mad(1/svg.clientWidth, viewOffset)
-      const diff = pos.sub(buttonPos)
-      const dist = Math.pow(diff.dot(diff)/144, 0.3)
-      noBtn.setAttribute('d', interpolate(distortedPath, circlePath, Math.max(Math.min(dist-0.4, 1), 0)).join(' '))
-      noBtn.setAttribute('transform', transformTemplate.replace('{rot}', Math.atan2(-diff.x, diff.y)*57.3))
-    }
+
+    // Fit viewbox in page
+    let viewOffset
+    let minWidth
+    const minOffset = 90
     const updateViewbox = ()=>{
       const ratio = window.innerWidth / window.innerHeight
-      const minSize = 180
-      const viewBox = ratio > 1 ? Math.round(-minSize*ratio/2) + ' ' + -minSize/2 + ' ' + Math.round(minSize*ratio) + ' ' + minSize : -minSize/2 + ' ' + Math.round(-minSize/ratio/2) + ' ' + minSize + ' ' + Math.round(minSize/ratio)
-      console.log(viewBox)
+      if (ratio > 1) {
+        viewOffset = V(Math.round(-minOffset*ratio), -minOffset)
+        minWidth = false
+      } else {
+        viewOffset = V(-minOffset, Math.round(-minOffset/ratio))
+        minWidth = true
+      }
+      const viewBox = viewOffset + ',' + viewOffset.mul(-2)
       svg.setAttribute('viewBox', viewBox)
     }
     window.addEventListener('resize', updateViewbox)
     updateViewbox()
-    function reject() {
-      svg.style.opacity = 0
+
+    // Animate noBtn
+    const buttonPos = V(32,-8)
+    const circlePath = ['M', 17,17, 'C', 12.3,21.7, 6.1,24, 0,24, -6.1,24, -12.3,21.7, -17,17, 'M', -17,17, 'C', -32,1.9, -21.4,-23.9, 0,-23.9, 21.4,-23.9, 32,1.9, 17,17]
+    const distortedPath = ['M', 24,-4, 'C', 24,20, 8,1, 0,1, -8,1, -24,20, -24,-4, 'M', -24,-4, 'C', -24,-17.3, -13.3,-28, 0,-28, 13.3,-28, 24,-17.3, 24,-4]
+    const interpolate = (arr1, arr2, pos) => arr1.map((item, index) => typeof item === 'string' ? item : item - (item - arr2[index])*pos)
+    function mousemove() {
+      const pos = V(event.offsetX*minOffset*2, event.offsetY*minOffset*2).mad(minWidth ? 1/svg.clientWidth : 1/svg.clientHeight, viewOffset)
+      const diff = pos.sub(buttonPos)
+      const dist = Math.pow(diff.dot(diff)/144, 0.3)
+      noBtn.setAttribute('d', interpolate(distortedPath, circlePath, Math.max(Math.min(dist-0.4, 1), 0)).join(' '))
+      noBtn.setAttribute('transform', 'translate(32 -8) scale(0.5 0.5) rotate({rot})'.replace('{rot}', Math.atan2(-diff.x, diff.y)*57.3))
     }
+
     function animateText(elem, nextText) {
       let i = 1, oldText = elem.textContent
       if (elem.children[0])
@@ -122,6 +135,11 @@
           clearInterval(interval)
       }, 50)
     }
+
+    // Yes/No button actions
+    function reject() {
+      svg.style.opacity = 0
+    }
     function accept() {
       questionTxt.children[0].setAttribute('to', -39)
       animateText(questionTxt, 'Bé có yêu anh hong?')
@@ -129,6 +147,9 @@
       animateText(choices[1], 'Không')
       animateText(greetingTxt, '')
       questionTxt.children[0].beginElement()
+      function showHidden(value) {
+        hiddenTxt.style.opacity = value
+      }
       yesBtn.onmouseleave = () => showHidden(0)
       yesBtn.onmouseenter = () => showHidden(1)
       svg.onmousemove = () => mousemove()
@@ -154,15 +175,11 @@
         }, 2000)
       }
     }
-    function showHidden(value) {
-      hiddenTxt.style.opacity = value
-    }
-    const pow = (num,pow) => Math.sign(num) * Math.pow(Math.abs(num), pow)
-    let hearts = []
-    const accel = -1
-    const drag = 0.96
+
+    // Heart animation
+    const minihearts = []
     let size = 1
-    const inHeart = pos => {
+    const inHeart = (pos, size) => {
       const point = svg.createSVGPoint()
       point.x = pos.x/size*1.7
       point.y = pos.y/size*1.7
@@ -172,9 +189,12 @@
       yesBtn.style.display = 'none'
       noBtn.style.display = 'none'
       heart.style.display = 'unset'
+
+      // Main minihearts loop
+      const drag = 0.96
       setInterval(() => {
-        for (const path of hearts) {
-          const inside = inHeart(path.pos)
+        for (const path of minihearts) {
+          const inside = inHeart(path.pos, size)
           path.accel = path.pos.sub(path.attraction).mul(0.02)
           if (!inside && !path.top) {
             path.top = true
@@ -189,21 +209,16 @@
         }
       }, 100)
     }
+    // Random point inside shapes
     const randDonut = () => {
       const angle = Math.random()*Math.PI*2
       const radius = Math.random()*2 + 1
       return V(Math.sin(angle)*radius, Math.cos(angle)*radius)
     }
     const randHeart = () => {
-      const inHeart = pos => {
-        const point = svg.createSVGPoint()
-        point.x = pos.x/size*2
-        point.y = pos.y/size*2
-        return heart.isPointInFill(point)
-      }
       while(true) {
         const point = V((Math.random()-0.5)*50*size, (Math.random()-0.5)*50*size)
-        if (inHeart(point))
+        if (inHeart(point, size*0.6))
           return point
       }
     }
@@ -211,68 +226,42 @@
       const point = heart.getPointAtLength(heart.getTotalLength()*Math.random())
       return V(point.x*size/1.7, point.y*size/1.7)
     }
-    var heartDone = true
-    var roundHeart = false
+    var heartBeatDone = true
+    var heartGone = false
     const svgUrl = 'http://www.w3.org/2000/svg'
-    const colors = [[255,200,220, 0.5], [255,70,120, 1]]
+    const heartColors = [[255,200,220, 0.5], [255,70,120, 1]]
     const heartPath = ['M', 32.5,-8.38, 'C', 32.5,16.6, 0,34.1, 0,34.1, 0,34.1, -32.5,16.6, -32.5,-8.38, -32.5,-33.4, 0,-33.4, 0,-8.38, 0,-33.4, 32.5,-33.4, 32.5,-8.38]
     function heartbeat() {
       promptTxt.style.opacity = 0
-      if (!heartDone) {
-        heart.parentNode.children[1].onend = () => { heartDone = true; heartbeat() }
+      if (!heartBeatDone) {
+        heart.parentNode.children[1].onend = () => { heartBeatDone = true; heartbeat() }
       } else {
+        for (const path of minihearts)
+          path.vel = path.vel.mad(1.4, randDonut())
         if (size < 3) {
+          // Start animation
           heart.parentNode.children[1].setAttribute('from', size)
           heart.parentNode.children[1].setAttribute('to', size += 0.2)
+          heart.parentNode.children[1].onend = ()=>heartBeatDone = true
           heart.parentNode.children[1].beginElement()
           heart.children[0].beginElement()
+          // Transition colors
           const pos = Math.min((size-1)/2, 1)
           heart.style.fill = 'rgb(0,0,0,' + (1-pos*pos*pos) + ')'
           questionTxt.style.fill = 'rgb(' + 255 + ',' + (255-90*pos) + ',' + (255-70*pos) + ')'
           heart.style.stroke = 'rgb(' + 255 + ',' + (255-190*pos) + ',' + (255-150*pos) + ','+(1-pos*pos*0.6)+ ')'
-        } else if (!roundHeart) {
-          heart.setAttribute('d', 'M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38')
-          setTimeout(() => {
-            for (const path of hearts) {
-              path.attraction = randHeartStroke()
-              path.border = true
-            }
-          }, 10)
-          heart.children[0].setAttribute('keyTimes', '0;1')
-          heart.children[0].setAttribute('dur', '0.3s')
-          heart.parentNode.children[1].setAttribute('values', size+';'+(size+0.3)+';'+size)
-          heart.parentNode.children[1].setAttribute('keyTimes', '0;0.3;1')
-          roundHeart = true
-          window.addEventListener('devicemotion', event => {
-            const a = event.acceleration
-            const pow = Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z)
-            for (const path of hearts) {
-              path.vel = path.vel.sub(randDonut().mul(pow*0.01))
-            }
-          })
-          heart.children[0].beginElement()
-          heart.style.stroke = 'rgb(0,0,0,0)'
-          heart.style.fill = 'rgb(0,0,0,0)'
-        }
-        heart.parentNode.children[1].beginElement()
-        heart.parentNode.children[1].onend = ()=>heartDone = true
-        heartDone = false
-        for (const path of hearts) {
-          path.vel = path.vel.sub(randDonut())
-        }
-        if (!roundHeart) {
-          for (let i = 0; i < 32; i++) {
+          heartBeatDone = false
+
+          // Spawn minihearts
+          for (let i = 32; i-->0;) {
             const path = document.createElementNS(svgUrl, 'path')
             const animate = document.createElementNS(svgUrl, 'animateTransform')
             const scale = (Math.pow(Math.random(),4)*0.05+0.06)*Math.sqrt(size)
             path.setAttribute('d', heartPath.map(item => typeof item == 'string' ? item : item*scale).join(' '))
-            path.style.stroke = 'none'
-            path.pos = randHeart()
-            path.attraction = path.pos
+            path.setAttribute('class', 'miniheart')
+            path.style.fill = 'rgb('+heartColors[0].map((c,i) => c+Math.random()*(heartColors[1][i]-c)).join(',')+')'
+            path.attraction = path.pos = randHeart()
             path.vel = randDonut().mul(2*Math.sqrt(size))
-            path.style.fill = 'rgb('+colors[0].map((c,i) => c+Math.random()*(colors[1][i]-c)).join(',')+')'
-            path.style.opacity = 0
-            path.style.pointerEvents='none'
             path.anim = animate
             animate.setAttribute('attributeName', 'transform')
             animate.setAttribute('type', 'translate')
@@ -280,12 +269,28 @@
             animate.setAttribute('fill', 'freeze')
             path.appendChild(animate)
             svg.prepend(path)
-            hearts.push(path)
+            minihearts.push(path)
           }
           setTimeout(() => {
-            for(const path of hearts)
+            for(const path of minihearts)
               path.style.opacity = 1
           }, 1)
+        } else if (!heartGone) {
+          // Put heart to final state
+          heart.setAttribute('d', 'M 32.5,-8.38 C 32.5,16.6 0,34.1 0,34.1 0,34.1 -32.5,16.6 -32.5,-8.38 -32.5,-33.4 0,-33.4 0,-8.38 0,-33.4 32.5,-33.4 32.5,-8.38')
+          heart.style.stroke = 'rgb(0,0,0,0)'
+          heart.style.fill = 'rgb(0,0,0,0.1)'
+          heartGone = true
+          // Reposition minihearts to heart stroke
+          for (const path of minihearts)
+            path.attraction = randHeartStroke()
+          // Convert device shake on mobile to miniheart motion
+          window.addEventListener('devicemotion', event => {
+            const a = event.acceleration
+            const pow = Math.sqrt(a.x*a.x+a.y*a.y+a.z*a.z)
+            for (const path of minihearts)
+              path.vel = path.vel.mad(Math.exp(pow*0.004), randDonut().mul(pow*0.01))
+          })
         }
       }
     }
